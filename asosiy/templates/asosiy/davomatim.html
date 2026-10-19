@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Davomatim — NEXIO.CRM</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-light: #eff6ff;
+            --white: #ffffff;
+            --bg: #f5f7fb;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px 25px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, 0.25);
+        }
+
+        .logo-text h2 {
+            font-size: 18px;
+            color: #111827;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 10px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0 13px;
+            margin: 18px 0 8px;
+            letter-spacing: .5px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            border-radius: 11px;
+            text-decoration: none;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .nav a:hover {
+            background: #f1f5f9;
+            color: var(--blue);
+        }
+
+        .nav a.active {
+            background: var(--blue);
+            color: white;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, .20);
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* HELP */
+
+        .help-card {
+            margin-top: auto;
+            background: var(--blue-light);
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .help-card strong {
+            display: block;
+            font-size: 13px;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .help-card p {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .help-card a {
+            display: block;
+            text-align: center;
+            background: var(--blue);
+            color: white;
+            padding: 8px;
+            border-radius: 9px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            height: 78px;
+            background: rgba(255,255,255,.92);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            backdrop-filter: blur(10px);
+        }
+
+        .topbar-left h1 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .topbar-left p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #475569;
+            font-size: 17px;
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-left: 5px;
+            padding-left: 12px;
+            border-left: 1px solid var(--border);
+            text-decoration: none;
+        }
+
+        .avatar {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .profile-mini span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 30px 34px 50px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 7px;
+            color: #172033;
+        }
+
+        .page-title p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 17px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: .25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--blue);
+        }
+
+        .stat-name {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-box {
+            background: white;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 22px;
+            border-bottom: 1px solid #edf0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-header h2 {
+            font-size: 20px;
+            color: #172033;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            text-align: left;
+            padding: 16px 20px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 17px 20px;
+            border-top: 1px solid #edf0f5;
+            color: #374151;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #fafcff;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .present {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .absent {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .late {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .excused {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            background: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 18px;
+            border: 1px dashed #cbd5e1;
+            box-shadow: var(--shadow);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .empty p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        .mobile-menu {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .25s;
+                box-shadow: 10px 0 30px rgba(0,0,0,.08);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-menu {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .topbar-left {
+                display: none;
+            }
+
+            .content {
+                padding: 20px 18px 40px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-number {
+                font-size: 23px;
+            }
+
+            .profile-mini span {
+                display: none;
+            }
+
+            .page-title h2 {
+                font-size: 24px;
+            }
+        }
+
+        /* ================= SUBTLE MODERN ANIMATIONS ================= */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .stats .stat-card:nth-child(1) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+        .stats .stat-card:nth-child(2) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
+        .stats .stat-card:nth-child(3) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+        .stats .stat-card:nth-child(4) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+
+        .table-box {
+            animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        .stat-card {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.08);
+            border-color: #bfdbfe;
+        }
+
+        .nav a {
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav a:hover {
+            transform: translateX(4px);
+        }
+
+        .nav a:active {
+            transform: scale(0.98);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            N
+        </div>
+
+        <div class="logo-text">
+            <h2>NEXIO</h2>
+            <span>EDUCATION CRM</span>
+        </div>
+
+    </div>
+
+
+    <div class="menu-title">
+        Asosiy
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="{% url 'index' %}">
+            <span class="nav-icon">⌂</span>
+            <span>Bosh sahifa</span>
+        </a>
+
+        <a href="{% url 'profil' %}">
+            <span class="nav-icon">◉</span>
+            <span>Profil</span>
+        </a>
+
+        <a href="{% url 'guruhlarim' %}">
+            <span class="nav-icon">▣</span>
+            <span>Guruhlarim</span>
+        </a>
+
+        <a href="{% url 'darslarim' %}">
+            <span class="nav-icon">▤</span>
+            <span>Darslarim</span>
+        </a>
+
+        <a href="{% url 'davomatim' %}" class="active">
+            <span class="nav-icon">✓</span>
+            <span>Davomat</span>
+        </a>
+
+        <a href="{% url 'reyting' %}">
+            <span class="nav-icon">★</span>
+            <span>Reytingim</span>
+        </a>
+
+        <a href="{% url 'chat' %}">
+            <span class="nav-icon">☵</span>
+            <span>Chat</span>
+        </a>
+
+    </nav>
+
+
+    <div class="menu-title">
+        Qo‘shimcha
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="{% url 'tolov' %}">
+            <span class="nav-icon">₽</span>
+            <span>To‘lovlarim</span>
+        </a>
+
+        <a href="#">
+            <span class="nav-icon">♢</span>
+            <span>Bildirishnomalar</span>
+        </a>
+
+        <a href="{% url 'profil' %}">
+            <span class="nav-icon">⚙</span>
+            <span>Sozlamalar</span>
+        </a>
+
+    </nav>
+
+
+    <div class="help-card">
+
+        <strong>💬 Yordam kerakmi?</strong>
+
+        <p>
+            Muammo yoki savollaringiz bo‘lsa,
+            administrator bilan bog‘laning.
+        </p>
+
+        <a href="{% url 'chat' %}">
+            Chatga o'tish
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <button
+            class="mobile-menu"
+            onclick="toggleSidebar()"
+        >
+            ☰
+        </button>
+
+
+        <div class="topbar-left">
+
+            <h1>
+                Davomat
+            </h1>
+
+            <p>
+                Darslardagi qatnashuv statistikangiz
+            </p>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <a
+                href="{% url 'chat' %}"
+                class="top-icon"
+            >
+                💬
+            </a>
+
+            <a
+                href="#"
+                class="top-icon"
+            >
+                🔔
+            </a>
+
+            <a
+                href="{% url 'profil' %}"
+                class="profile-mini"
+            >
+
+                <div class="avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <span>
+                    {{ request.user.first_name|default:request.user.username }}
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <div class="content">
+
+        <div class="page-title">
+
+            <h2>
+                📊 Davomatim
+            </h2>
+
+            <p>
+                Darslardagi qatnashuvingiz statistikasi
+            </p>
+
+        </div>
+
+
+        <!-- ================= STATISTIKA ================= -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <div class="stat-number">
+                    {{ jami_darslar|default:0 }}
+                </div>
+
+                <div class="stat-name">
+                    Jami darslar
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✅
+                </div>
+
+                <div class="stat-number">
+                    {{ qatnashgan|default:0 }}
+                </div>
+
+                <div class="stat-name">
+                    Qatnashgan
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ❌
+                </div>
+
+                <div class="stat-number">
+                    {{ kelmagan|default:0 }}
+                </div>
+
+                <div class="stat-name">
+                    Kelmagan
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⏰
+                </div>
+
+                <div class="stat-number">
+                    {{ kechikkan|default:0 }}
+                </div>
+
+                <div class="stat-name">
+                    Kechikkan
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= DAVOMAT JADVALI ================= -->
+
+        {% if davomatlar %}
+
+            <div class="table-box">
+
+                <div class="table-header">
+
+                    <h2>
+                        📋 Davomat tarixi
+                    </h2>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    №
+                                </th>
+
+                                <th>
+                                    Guruh
+                                </th>
+
+                                <th>
+                                    Sana
+                                </th>
+
+                                <th>
+                                    Dars
+                                </th>
+
+                                <th>
+                                    Holat
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for davomat in davomatlar %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            {{ davomat.lesson.group.name }}
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+                                        {{ davomat.lesson.date|date:"d.m.Y" }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ davomat.lesson.topic|default:"Mavzu ko‘rsatilmagan" }}
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if davomat.status == "present" %}
+
+                                            <span class="status present">
+                                                ✅ Qatnashdi
+                                            </span>
+
+                                        {% elif davomat.status == "absent" %}
+
+                                            <span class="status absent">
+                                                ❌ Kelmagan
+                                            </span>
+
+                                        {% elif davomat.status == "late" %}
+
+                                            <span class="status late">
+                                                ⏰ Kechikdi
+                                            </span>
+
+                                        {% elif davomat.status == "excused" %}
+
+                                            <span class="status excused">
+                                                📝 Sababli
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status">
+                                                {{ davomat.get_status_display }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📊
+                </div>
+
+                <h2>
+                    Davomat maʼlumotlari yo‘q
+                </h2>
+
+                <p>
+                    Hozircha sizning davomat maʼlumotlaringiz kiritilmagan.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+
+<script>
+
+    function toggleSidebar() {
+        document
+            .getElementById("sidebar")
+            .classList
+            .toggle("show");
+    }
+
+</script>
+
+</body>
+</html>

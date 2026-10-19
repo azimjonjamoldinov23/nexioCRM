@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Guruhga yozilish — NEXIO.CRM</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3157d5;
+            --primary-dark: #2444b8;
+            --primary-light: #eef2ff;
+
+            --text: #172033;
+            --muted: #7b8498;
+
+            --bg: #f5f7fb;
+            --white: #ffffff;
+            --border: #e7ebf3;
+
+            --green: #16a36a;
+            --green-bg: #eaf9f2;
+
+            --orange: #d97706;
+            --orange-bg: #fff7e8;
+
+            --shadow: 0 15px 45px rgba(30, 50, 90, .08);
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 85% 0%,
+                    rgba(49, 87, 213, .07),
+                    transparent 30%
+                ),
+                var(--bg);
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+
+            background: rgba(255,255,255,.94);
+            backdrop-filter: blur(18px);
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1180px;
+            min-height: 74px;
+
+            margin: auto;
+            padding: 0 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            color: white;
+            font-size: 18px;
+            font-weight: 900;
+
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #5a7bea
+            );
+
+            box-shadow:
+                0 8px 20px rgba(49,87,213,.23);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 10px 15px;
+
+            color: var(--text);
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            background: white;
+
+            transition: .2s ease;
+        }
+
+        .back:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+            border-color: #d3dcfa;
+            transform: translateY(-1px);
+        }
+
+        /* ================= PAGE ================= */
+
+        .container {
+            max-width: 820px;
+
+            margin: auto;
+            padding: 42px 20px 70px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 7px 11px;
+
+            margin-bottom: 13px;
+
+            color: var(--primary);
+
+            background: var(--primary-light);
+
+            border-radius: 9px;
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .4px;
+        }
+
+        h1 {
+            font-size: 32px;
+            line-height: 1.2;
+
+            font-weight: 900;
+            letter-spacing: -1px;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ================= MAIN CARD ================= */
+
+        .card {
+            overflow: hidden;
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+            border-radius: 24px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .card-top {
+            padding: 30px 30px 24px;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .group-icon {
+            width: 64px;
+            height: 64px;
+
+            margin-bottom: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #e0e7ff
+                );
+
+            color: var(--primary);
+
+            font-size: 29px;
+        }
+
+        .card-title {
+            font-size: 23px;
+            font-weight: 850;
+
+            margin-bottom: 7px;
+        }
+
+        .card-description {
+            color: var(--muted);
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ================= GROUP INFO ================= */
+
+        .group-info {
+            margin: 22px 30px;
+
+            overflow: hidden;
+
+            border: 1px solid var(--border);
+            border-radius: 18px;
+
+            background: #fbfcff;
+        }
+
+        .group-header {
+            padding: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8faff,
+                    #f2f5ff
+                );
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .group-header-label {
+            color: var(--muted);
+
+            font-size: 11px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+            letter-spacing: .6px;
+
+            margin-bottom: 7px;
+        }
+
+        .group-header h2 {
+            font-size: 22px;
+            font-weight: 850;
+
+            color: var(--text);
+        }
+
+        .info-list {
+            padding: 5px 20px;
+        }
+
+        .info {
+            min-height: 55px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .info:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 35px;
+            height: 35px;
+
+            flex: 0 0 35px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: var(--primary-light);
+
+            font-size: 15px;
+        }
+
+        .info-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .info-label {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .info strong {
+            color: var(--text);
+
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        /* ================= BOTTOM ================= */
+
+        .card-bottom {
+            padding: 0 30px 30px;
+        }
+
+        /* ================= WARNING ================= */
+
+        .warning {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+
+            padding: 15px 16px;
+
+            margin-bottom: 18px;
+
+            color: #92400e;
+
+            background: var(--orange-bg);
+
+            border: 1px solid #fde6b7;
+            border-radius: 13px;
+
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .warning-icon {
+            flex: 0 0 auto;
+        }
+
+        /* ================= SUCCESS ================= */
+
+        .success {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+
+            padding: 17px;
+
+            margin-bottom: 18px;
+
+            color: #086442;
+
+            background: var(--green-bg);
+
+            border: 1px solid #bcebd6;
+            border-radius: 14px;
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .success-icon {
+            width: 30px;
+            height: 30px;
+
+            flex: 0 0 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            color: white;
+            background: var(--green);
+
+            font-size: 14px;
+        }
+
+        .success b {
+            color: #075c3d;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .join-btn {
+            width: 100%;
+
+            border: none;
+            outline: none;
+
+            padding: 15px 18px;
+
+            border-radius: 13px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #4c6fe0
+                );
+
+            font-size: 14px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 22px rgba(49,87,213,.20);
+
+            transition: .2s ease;
+        }
+
+        .join-btn:hover {
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-dark),
+                    #3f62d4
+                );
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 13px 28px rgba(49,87,213,.25);
+        }
+
+        .join-btn:active {
+            transform: translateY(0);
+        }
+
+        .my-groups-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            width: 100%;
+
+            padding: 14px 18px;
+
+            color: white;
+            text-decoration: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a36a,
+                    #20b979
+                );
+
+            border-radius: 13px;
+
+            font-size: 14px;
+            font-weight: 800;
+
+            box-shadow:
+                0 9px 22px rgba(22,163,106,.17);
+
+            transition: .2s ease;
+        }
+
+        .my-groups-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 25px rgba(22,163,106,.22);
+        }
+
+        .cancel-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+
+            margin-top: 11px;
+
+            padding: 13px;
+
+            color: #596273;
+            text-decoration: none;
+
+            background: #f5f6f8;
+
+            border: 1px solid #eceef2;
+            border-radius: 12px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: .2s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #eceef3;
+            color: var(--text);
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+
+            .header-inner {
+                min-height: 67px;
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .logo-icon {
+                width: 37px;
+                height: 37px;
+            }
+
+            .back {
+                padding: 9px 11px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding:
+                    28px 14px
+                    50px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .card-top {
+                padding: 25px 20px 21px;
+            }
+
+            .card-bottom {
+                padding: 0 20px 22px;
+            }
+
+            .group-info {
+                margin: 18px 20px;
+            }
+
+            .group-header {
+                padding: 18px;
+            }
+
+            .group-header h2 {
+                font-size: 19px;
+            }
+
+            .info-list {
+                padding: 3px 17px;
+            }
+
+            .info {
+                align-items: flex-start;
+                padding: 12px 0;
+            }
+
+            .info-icon {
+                margin-top: 1px;
+            }
+        }
+
+        @media (max-width: 400px) {
+
+            .back {
+                font-size: 0;
+            }
+
+            .back::first-letter {
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                N
+            </div>
+
+            <div>
+                NEXIO<span>.CRM</span>
+            </div>
+
+        </div>
+
+        <a href="{% url 'guruhlarim' %}" class="back">
+            ← &nbsp; Mening guruhlarim
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <div class="page-heading">
+
+        <div class="eyebrow">
+            👥 GURUHGA QO‘SHILISH
+        </div>
+
+        <h1>
+            Guruhga yozilish
+        </h1>
+
+        <p class="subtitle">
+            Guruh ma’lumotlarini ko‘rib chiqing va o‘qishni boshlash uchun
+            yozilishni tasdiqlang.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <!-- CARD TOP -->
+
+        <div class="card-top">
+
+            <div class="group-icon">
+                👥
+            </div>
+
+            <div class="card-title">
+                Guruh haqida
+            </div>
+
+            <p class="card-description">
+                Quyidagi ma’lumotlar bilan tanishib chiqib,
+                guruhga qo‘shilishingiz mumkin.
+            </p>
+
+        </div>
+
+
+        <!-- GROUP INFO -->
+
+        <div class="group-info">
+
+            <div class="group-header">
+
+                <div class="group-header-label">
+                    Guruh nomi
+                </div>
+
+                <h2>
+                    {{ group.name }}
+                </h2>
+
+            </div>
+
+
+            <div class="info-list">
+
+                {% if group.subject %}
+
+                <div class="info">
+
+                    <div class="info-icon">
+                        📚
+                    </div>
+
+                    <div class="info-content">
+
+                        <span class="info-label">
+                            Fan / yo‘nalish
+                        </span>
+
+                        <strong>
+                            {{ group.subject }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if group.teacher %}
+
+                <div class="info">
+
+                    <div class="info-icon">
+                        👨‍🏫
+                    </div>
+
+                    <div class="info-content">
+
+                        <span class="info-label">
+                            O‘qituvchi
+                        </span>
+
+                        <strong>
+                            {{ group.teacher.full_name|default:group.teacher.username }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if group.room %}
+
+                <div class="info">
+
+                    <div class="info-icon">
+                        🚪
+                    </div>
+
+                    <div class="info-content">
+
+                        <span class="info-label">
+                            Dars xonasi
+                        </span>
+
+                        <strong>
+                            {{ group.room }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if group.lesson_days or group.lesson_time %}
+
+                <div class="info">
+
+                    <div class="info-icon">
+                        🕐
+                    </div>
+
+                    <div class="info-content">
+
+                        <span class="info-label">
+                            Dars vaqti
+                        </span>
+
+                        <strong>
+                            {{ group.lesson_days }}
+                            {% if group.lesson_days and group.lesson_time %}
+                                •
+                            {% endif %}
+                            {{ group.lesson_time|time:"H:i" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if group.monthly_price %}
+
+                <div class="info">
+
+                    <div class="info-icon">
+                        💰
+                    </div>
+
+                    <div class="info-content">
+
+                        <span class="info-label">
+                            Oylik to‘lov
+                        </span>
+
+                        <strong>
+                            {{ group.monthly_price }} so‘m
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTION AREA -->
+
+        <div class="card-bottom">
+
+            {% if is_enrolled %}
+
+                <div class="success">
+
+                    <div class="success-icon">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <b>
+                            Siz allaqachon ushbu guruhga yozilgansiz!
+                        </b>
+
+                        <br>
+
+                        Ushbu guruh
+                        <b>“Mening guruhlarim”</b>
+                        bo‘limida ko‘rinadi.
+
+                    </div>
+
+                </div>
+
+
+                <a href="{% url 'guruhlarim' %}" class="my-groups-btn">
+
+                    Mening guruhlarimga o‘tish
+                    →
+
+                </a>
+
+            {% else %}
+
+                <div class="warning">
+
+                    <div class="warning-icon">
+                        ℹ️
+                    </div>
+
+                    <div>
+
+                        <b>Eslatma:</b>
+                        guruhga yozilganingizdan so‘ng ushbu guruh
+                        <b>“Mening guruhlarim”</b>
+                        bo‘limida ko‘rinadi.
+
+                    </div>
+
+                </div>
+
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="join-btn">
+
+                        ✓ &nbsp; Guruhga yozilishni tasdiqlash
+
+                    </button>
+
+                </form>
+
+
+                <a href="{% url 'guruhlarim' %}" class="cancel-btn">
+
+                    Bekor qilish
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

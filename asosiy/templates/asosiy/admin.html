@@ -1,0 +1,830 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin panel — NEXIO.CRM</title>
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-light: #eff6ff;
+            --bg: #f5f7fb;
+            --white: #fff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 10px 30px rgba(15, 23, 42, .07);
+        }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, Arial, sans-serif; }
+        a { color: inherit; text-decoration: none; }
+        .sidebar {
+            position: fixed; inset: 0 auto 0 0; z-index: 10; display: flex; width: 260px;
+            flex-direction: column; padding: 24px 16px; overflow-y: auto;
+            background: var(--white); border-right: 1px solid var(--border);
+        }
+        .logo { display: flex; align-items: center; gap: 12px; padding: 0 12px 28px; }
+        .logo-icon {
+            display: grid; width: 44px; height: 44px; place-items: center; border-radius: 13px;
+            color: #fff; background: linear-gradient(135deg, var(--blue), #60a5fa);
+            font-size: 19px; font-weight: 800; box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+        }
+        .logo-text h2 { margin: 0; font-size: 19px; font-weight: 800; }
+        .logo-text span { color: var(--muted); font-size: 10px; font-weight: 600; }
+        .menu-title {
+            margin: 10px 0; padding: 0 12px; color: #9ca3af; font-size: 10px;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .nav { display: grid; gap: 5px; }
+        .nav a {
+            display: flex; align-items: center; gap: 13px; padding: 12px 13px;
+            border-radius: 11px; color: #596273; font-size: 14px; font-weight: 600; transition: .2s;
+        }
+        .nav a:hover, .nav a.active { color: var(--blue); background: var(--blue-light); }
+        .nav a.active { color: #fff; background: var(--blue); box-shadow: 0 7px 18px rgba(37, 99, 235, .22); }
+        .nav-icon { width: 21px; text-align: center; font-size: 17px; }
+        .sidebar-bottom { margin-top: auto; padding-top: 20px; }
+        .help-card { padding: 16px; border: 1px solid #dbeafe; border-radius: 14px; background: var(--blue-light); }
+        .help-card strong { display: block; margin-bottom: 6px; font-size: 13px; }
+        .help-card p { margin: 0 0 10px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+        .help-card a { color: var(--blue); font-size: 12px; font-weight: 700; }
+        .main { min-height: 100vh; margin-left: 260px; }
+        .topbar {
+            position: sticky; top: 0; z-index: 5; display: flex; min-height: 78px;
+            align-items: center; justify-content: space-between; gap: 16px; padding: 12px 34px;
+            border-bottom: 1px solid var(--border); background: rgba(255, 255, 255, .96);
+        }
+        .title h1 { margin: 0; font-size: 23px; font-weight: 800; }
+        .title p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+        .top-actions { display: flex; align-items: center; gap: 10px; }
+        .user-mini { color: var(--text); font-size: 13px; font-weight: 700; }
+        .logout {
+            padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+            background: #fff; color: var(--text); font-size: 12px; font-weight: 700;
+        }
+        .logout:hover { border-color: #bfdbfe; color: var(--blue); background: var(--blue-light); }
+        .content { max-width: 1500px; margin: 0 auto; padding: 28px 34px 50px; }
+        .welcome {
+            position: relative; display: flex; align-items: center; justify-content: space-between;
+            gap: 20px; overflow: hidden; padding: 27px 30px; border-radius: 20px; color: #fff;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb 55%, #3b82f6);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, .2);
+        }
+        .welcome::after {
+            position: absolute; top: -90px; right: 30px; width: 220px; height: 220px;
+            border: 35px solid rgba(255, 255, 255, .08); border-radius: 50%; content: "";
+        }
+        .welcome-copy, .welcome-user { position: relative; z-index: 1; }
+        .welcome h2 { margin: 0 0 8px; font-size: 25px; }
+        .welcome p { margin: 0; font-size: 13px; opacity: .88; }
+        .welcome-user { text-align: right; font-size: 14px; font-weight: 700; }
+        .welcome-user span { display: block; margin-bottom: 5px; font-size: 11px; font-weight: 400; opacity: .75; }
+        .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 20px 0; }
+        .stat, .panel { overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: #fff; box-shadow: var(--shadow); }
+        .stat { padding: 19px; }
+        .stat-label { color: var(--muted); font-size: 12px; }
+        .stat-value { margin-top: 8px; font-size: 25px; font-weight: 800; }
+        .section-title {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            padding: 18px 20px; border-bottom: 1px solid var(--border);
+        }
+        .section-title h2 { margin: 0; font-size: 15px; font-weight: 800; }
+        .section-title span { color: var(--muted); font-size: 11px; }
+        .model-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; }
+        .model-card {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            min-height: 76px; padding: 13px; border: 1px solid var(--border); border-radius: 12px;
+            transition: .2s;
+        }
+        .model-card:hover { transform: translateY(-2px); border-color: #bfdbfe; background: #f8fbff; }
+        .model-info { min-width: 0; }
+        .model-info strong { display: block; font-size: 13px; }
+        .model-info small { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+        .model-actions { display: flex; flex: 0 0 auto; gap: 7px; }
+        .model-actions a {
+            padding: 8px 10px; border-radius: 9px; color: var(--blue);
+            background: var(--blue-light); font-size: 11px; font-weight: 700;
+        }
+        .model-actions a:hover { color: #fff; background: var(--blue); }
+        .profile-link {
+            display: flex; align-items: center; gap: 13px; margin-top: 16px;
+            padding: 12px 13px; border: 1px solid var(--border); border-radius: 11px;
+            color: #596273; font-size: 13px; font-weight: 700; transition: .2s;
+        }
+        .profile-link:hover { border-color: #bfdbfe; color: var(--blue); background: var(--blue-light); }
+        .empty { padding: 20px; color: var(--muted); font-size: 13px; }
+        .list-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .search-form { display: flex; gap: 8px; width: min(100%, 420px); }
+        .search-form input {
+            min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid var(--border);
+            border-radius: 9px; font: inherit; font-size: 13px;
+        }
+        .search-form button {
+            padding: 10px 14px; border: 0; border-radius: 9px; color: #fff;
+            background: var(--blue); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+        }
+        .table-wrap { overflow-x: auto; }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .data-table th, .data-table td { padding: 14px 18px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        .data-table th { color: var(--muted); background: #f9fafb; font-size: 11px; font-weight: 700; }
+        .data-table td { font-size: 13px; }
+        .data-table tbody tr:last-child td { border-bottom: 0; }
+        .data-table strong { display: block; font-size: 13px; }
+        .data-table small { color: var(--muted); }
+        .status-pill { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #ecfdf5; color: #15803d; font-size: 11px; font-weight: 700; }
+        .status-pill.inactive { background: #f3f4f6; color: #6b7280; }
+        .status-pill.warning { background: #fef3c7; color: #b45309; }
+        .status-pill.info { background: #eff6ff; color: #1d4ed8; }
+        .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+        .filter-tab {
+            padding: 7px 13px; border-radius: 9px; background: #fff; color: var(--muted);
+            font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid var(--border);
+            display: inline-flex; align-items: center; gap: 6px; transition: .2s;
+        }
+        .filter-tab:hover { border-color: #bfdbfe; color: var(--blue); }
+        .filter-tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+        .form-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 20px; }
+        .form-field label { display: block; margin-bottom: 7px; font-size: 12px; font-weight: 700; }
+        .form-field input, .form-field select, .form-field textarea {
+            width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid var(--border);
+            border-radius: 9px; background: #fff; color: var(--text); font: inherit; font-size: 13px;
+        }
+        .form-field input[type="checkbox"] { width: 18px; min-height: 18px; }
+        .form-field .field-errors { margin: 5px 0 0; color: #b91c1c; font-size: 11px; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 9px; padding: 0 20px 20px; }
+        .primary-action, .secondary-action, .row-action {
+            display: inline-flex; align-items: center; justify-content: center; padding: 9px 12px;
+            border: 1px solid var(--border); border-radius: 9px; background: #fff;
+            color: var(--text); font: inherit; font-size: 12px; font-weight: 700;
+        }
+        .primary-action { border-color: var(--blue); background: var(--blue); color: #fff; cursor: pointer; }
+        .row-action { color: var(--blue); background: var(--blue-light); }
+        .row-actions { display: flex; gap: 7px; }
+        .group-actions { display: flex; align-items: center; gap: 6px; }
+        .delete-action {
+            padding: 8px 10px; border: 1px solid #fecaca; border-radius: 9px;
+            background: #fff; color: #b91c1c; font: inherit; font-size: 11px;
+            font-weight: 700; cursor: pointer;
+        }
+        .delete-action:hover { background: #fef2f2; }
+        .inline-form { margin: 0; }
+        .attendance-picker { display: flex; align-items: end; gap: 10px; padding: 18px 20px; }
+        .attendance-picker .form-field { flex: 1; }
+        .attendance-status { min-width: 135px; padding: 7px; border: 1px solid var(--border); border-radius: 8px; font: inherit; }
+        .form-alert { margin: 16px 20px 0; padding: 11px 13px; border-radius: 9px; background: #fef2f2; color: #b91c1c; font-size: 12px; }
+        .message { margin-bottom: 14px; padding: 11px 14px; border-radius: 10px; background: #ecfdf5; color: #166534; font-size: 13px; }
+        .mobile-menu {
+            display: none; width: 40px; height: 40px; border: 1px solid var(--border);
+            border-radius: 10px; background: #fff; cursor: pointer;
+        }
+        @media (max-width: 1000px) {
+            .sidebar { width: 225px; }
+            .main { margin-left: 225px; }
+            .content { padding: 24px 20px 40px; }
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 700px) {
+            .sidebar { transform: translateX(-100%); transition: transform .2s; }
+            .sidebar.open { transform: translateX(0); box-shadow: 15px 0 30px rgba(15, 23, 42, .12); }
+            .main { margin-left: 0; }
+            .topbar { min-height: 68px; padding: 10px 16px; }
+            .mobile-menu { display: inline-grid; flex: 0 0 40px; place-items: center; }
+            .topbar-leading { display: flex; align-items: center; gap: 12px; }
+            .title h1 { font-size: 19px; }
+            .title p { display: none; }
+            .content { padding: 16px 14px 30px; }
+            .welcome { align-items: flex-start; flex-direction: column; padding: 22px; }
+            .welcome h2 { font-size: 21px; }
+            .welcome-user { text-align: left; }
+            .model-grid { grid-template-columns: 1fr; padding: 12px; }
+        }
+        @media (max-width: 480px) {
+            .stats { gap: 10px; }
+            .stat { padding: 14px; }
+            .stat-value { font-size: 21px; }
+            .user-mini { display: none; }
+            .section-title { align-items: flex-start; flex-direction: column; }
+            .model-card { align-items: flex-start; flex-direction: column; }
+            .model-actions { width: 100%; }
+            .model-actions a { flex: 1; text-align: center; }
+            .form-layout { grid-template-columns: 1fr; gap: 13px; padding: 15px; }
+            .attendance-picker { align-items: stretch; flex-direction: column; padding: 15px; }
+            .data-table th, .data-table td { padding: 11px 12px; }
+        }
+
+        /* ================= SUBTLE MODERN ANIMATIONS ================= */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDownAlert {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome {
+            animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .stats .stat:nth-child(1) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+        .stats .stat:nth-child(2) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
+        .stats .stat:nth-child(3) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+        .stats .stat:nth-child(4) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+
+        .panel {
+            animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+        }
+
+        .stat {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.08);
+            border-color: #bfdbfe;
+        }
+
+        .nav a {
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav a:hover {
+            transform: translateX(4px);
+        }
+
+        .nav a:active {
+            transform: scale(0.98);
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.18s ease;
+        }
+
+        .data-table tbody tr:hover td {
+            background-color: #f8fbff;
+        }
+
+        .primary-action, .secondary-action, .row-action, .delete-action, .filter-tab {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .primary-action:hover {
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .primary-action:active, .secondary-action:active, .row-action:active, .delete-action:active {
+            transform: scale(0.97);
+        }
+
+        .message, .form-alert {
+            animation: slideDownAlert 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+    <div class="logo">
+        <div class="logo-icon">N</div>
+        <div class="logo-text"><h2>NEXIO</h2><span>EDUCATION CRM</span></div>
+    </div>
+    <div class="menu-title">Boshqaruv</div>
+    <nav class="nav">
+        <a class="{% if page == 'dashboard' %}active{% endif %}" href="{% url 'admin_panel' %}"><span class="nav-icon">⌂</span><span>Umumiy ko‘rinish</span></a>
+        <a class="{% if page == 'arizalar' %}active{% endif %}" href="{% url 'admin_arizalar' %}"><span class="nav-icon">📥</span><span>Arizalar (Lidlar)</span></a>
+        <a class="{% if page == 'groups' or page == 'group_form' or page == 'group_students' %}active{% endif %}" href="{% url 'admin_groups' %}"><span class="nav-icon">▣</span><span>Guruhlar</span></a>
+        <a class="{% if page == 'students' or page == 'student_form' or page == 'enroll_form' %}active{% endif %}" href="{% url 'admin_students' %}"><span class="nav-icon">♙</span><span>O‘quvchilar</span></a>
+        <a class="{% if page == 'attendance' or page == 'lesson_form' %}active{% endif %}" href="{% url 'admin_attendance' %}"><span class="nav-icon">✓</span><span>Davomat olish</span></a>
+        <a class="{% if page == 'teachers' or page == 'teacher_form' %}active{% endif %}" href="{% url 'admin_teachers' %}"><span class="nav-icon">♟</span><span>O‘qituvchilar</span></a>
+        <a class="{% if page == 'payments' or page == 'payment_form' %}active{% endif %}" href="{% url 'admin_payments' %}"><span class="nav-icon">₮</span><span>To‘lovlar</span></a>
+        <a class="{% if page == 'logout' %}active{% endif %}" href="{% url 'logout' %}"><span class="nav-icon">🚪</span><span>chiqsh</span></a>
+    </nav>
+    <a class="profile-link" href="{% url 'admin_profile' %}"><span class="nav-icon">◉</span><span>Admin profilim</span></a>
+
+    <div class="sidebar-bottom"> 
+        <div class="help-card">
+            <strong>CRM boshqaruvi</strong>
+            <p>Guruhlar, o‘quvchilar va arizalarni qulay boshqaring.</p>
+            <form method="post" action="{% url 'admin_logout' %}">
+                {% csrf_token %}
+                <button class="logout" type="submit">Tizimdan chiqish →</button>
+            </form>
+        </div>
+    </div>
+</aside>
+<main class="main">
+    <header class="topbar">
+        <div class="topbar-leading">
+            <button class="mobile-menu" type="button" aria-label="Menyuni ochish" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="title">
+                <h1>{% if page == "dashboard" %}Admin panel{% elif page == "arizalar" %}Arizalar va Lidlar{% elif page == "groups" %}Guruhlar{% elif page == "group_form" %}Guruhni boshqarish{% elif page == "group_students" %}Guruh o‘quvchilari{% elif page == "lesson_form" %}Dars qo‘shish{% elif page == "students" %}O‘quvchilar{% elif page == "student_form" %}Yangi o‘quvchi qo‘shish{% elif page == "enroll_form" %}O‘quvchini guruhga biriktirish{% elif page == "attendance" %}Davomat olish{% elif page == "payments" %}To‘lovlar{% elif page == "payment_form" %}To‘lov kiritish{% elif page == "teachers" %}O‘qituvchilar{% elif page == "teacher_form" %}O‘qituvchi qo‘shish{% else %}Admin panel{% endif %}</h1>
+                <p>O‘quv markazi boshqaruv tizimi</p>
+            </div>
+        </div>
+        <div class="top-actions">
+            <span class="user-mini">{{ request.user.full_name|default:request.user.username }}</span>
+            <a class="logout" href="{% url 'admin_profile' %}">Profil</a>
+        </div>
+    </header>
+    <div class="content">
+        {% for message in messages %}<div class="message" role="status">{{ message }}</div>{% endfor %}
+        {% if page == "dashboard" %}
+            <section class="welcome">
+                <div class="welcome-copy">
+                    <h2>Xush kelibsiz, {{ request.user.full_name|default:request.user.username }}!</h2>
+                    <p>CRM ma’lumotlarini ushbu paneldan ko‘ring va boshqaring.</p>
+                </div>
+                <div class="welcome-user"><span>Admin hisob</span>{{ request.user.username }}</div>
+            </section>
+
+            <section class="stats" aria-label="CRM statistikasi">
+                <div class="stat"><div class="stat-label">Jami o‘quvchilar</div><div class="stat-value">{{ dashboard_stats.students_count }}</div></div>
+                <div class="stat"><div class="stat-label">Faol guruhlar</div><div class="stat-value">{{ dashboard_stats.active_groups_count }}</div></div>
+                <div class="stat"><div class="stat-label">Yangi arizalar</div><div class="stat-value">{{ dashboard_stats.new_arizalar_count }}</div></div>
+                <div class="stat"><div class="stat-label">Jami tushum</div><div class="stat-value">{{ dashboard_stats.payments_sum }} so‘m</div></div>
+            </section>
+
+            <section class="panel">
+                <header class="section-title"><h2>Bo‘limlar</h2><span>Kerakli bo‘limni tanlang</span></header>
+                <div class="model-grid">
+                    <a class="model-card" href="{% url 'admin_arizalar' %}">
+                        <div class="model-info"><strong>Arizalar (Lidlar)</strong><small>Sayt va botdan tushgan yangi murojaatlar ({{ dashboard_stats.new_arizalar_count }} ta yangi)</small></div>
+                        <div class="model-actions"><span>Ko‘rish →</span></div>
+                    </a>
+                    <a class="model-card" href="{% url 'admin_groups' %}">
+                        <div class="model-info"><strong>Guruhlar</strong><small>Guruhlar ro‘yxati va dars jadvali</small></div>
+                        <div class="model-actions"><span>Boshqarish →</span></div>
+                    </a>
+                    <a class="model-card" href="{% url 'admin_students' %}">
+                        <div class="model-info"><strong>O‘quvchilar</strong><small>O‘quvchilar va ularning guruhlari</small></div>
+                        <div class="model-actions"><span>Boshqarish →</span></div>
+                    </a>
+                    <a class="model-card" href="{% url 'admin_attendance' %}">
+                        <div class="model-info"><strong>Davomat olish</strong><small>Dars bo‘yicha kelganlarni belgilang</small></div>
+                        <div class="model-actions"><span>Davomat →</span></div>
+                    </a>
+                    <a class="model-card" href="{% url 'admin_payments' %}">
+                        <div class="model-info"><strong>To‘lovlar</strong><small>O‘quvchi to‘lovlarini qayd eting va ko‘ring</small></div>
+                        <div class="model-actions"><span>Boshqarish →</span></div>
+                    </a>
+                    <a class="model-card" href="{% url 'admin_teachers' %}">
+                        <div class="model-info"><strong>O‘qituvchilar</strong><small>O‘qituvchi hisoblarini boshqaring</small></div>
+                        <div class="model-actions"><span>Boshqarish →</span></div>
+                    </a>
+                </div>
+            </section>
+        {% elif page == "arizalar" %}
+            <section class="stats" aria-label="Arizalar statistikasi">
+                <a class="stat" href="{% url 'admin_arizalar' %}?status=yangi" style="text-decoration:none; color:inherit;">
+                    <div class="stat-label">Yangi tushgan</div>
+                    <div class="stat-value" style="color:#d97706;">{{ stats.yangi }}</div>
+                </a>
+                <a class="stat" href="{% url 'admin_arizalar' %}?status=boglanildi" style="text-decoration:none; color:inherit;">
+                    <div class="stat-label">Bog‘lanildi</div>
+                    <div class="stat-value" style="color:var(--blue);">{{ stats.boglanildi }}</div>
+                </a>
+                <a class="stat" href="{% url 'admin_arizalar' %}?status=qabul_qilindi" style="text-decoration:none; color:inherit;">
+                    <div class="stat-label">Qabul qilindi</div>
+                    <div class="stat-value" style="color:#15803d;">{{ stats.qabul }}</div>
+                </a>
+                <a class="stat" href="{% url 'admin_arizalar' %}?status=bekor_qilindi" style="text-decoration:none; color:inherit;">
+                    <div class="stat-label">Bekor qilindi</div>
+                    <div class="stat-value" style="color:#b91c1c;">{{ stats.bekor }}</div>
+                </a>
+            </section>
+
+            <section class="panel">
+                <header class="section-title list-toolbar">
+                    <div>
+                        <h2>Arizalar va Lidlar</h2>
+                        <span>Jami {{ stats.jami }} ta ariza</span>
+                    </div>
+                    <form class="search-form" method="get">
+                        {% if status_filter %}<input type="hidden" name="status" value="{{ status_filter }}">{% endif %}
+                        <input type="search" name="q" value="{{ query }}" placeholder="Ism, telefon, kurs yoki telegram..." aria-label="Arizalarni qidirish">
+                        <button type="submit">Qidirish</button>
+                    </form>
+                </header>
+
+                <div style="padding: 0 20px 14px;">
+                    <div class="filter-tabs">
+                        <a class="filter-tab {% if not status_filter %}active{% endif %}" href="{% url 'admin_arizalar' %}{% if query %}?q={{ query }}{% endif %}">
+                            Barchasi ({{ stats.jami }})
+                        </a>
+                        <a class="filter-tab {% if status_filter == 'yangi' %}active{% endif %}" href="{% url 'admin_arizalar' %}?status=yangi{% if query %}&q={{ query }}{% endif %}">
+                            Yangi ({{ stats.yangi }})
+                        </a>
+                        <a class="filter-tab {% if status_filter == 'boglanildi' %}active{% endif %}" href="{% url 'admin_arizalar' %}?status=boglanildi{% if query %}&q={{ query }}{% endif %}">
+                            Bog‘lanildi ({{ stats.boglanildi }})
+                        </a>
+                        <a class="filter-tab {% if status_filter == 'qabul_qilindi' %}active{% endif %}" href="{% url 'admin_arizalar' %}?status=qabul_qilindi{% if query %}&q={{ query }}{% endif %}">
+                            Qabul qilindi ({{ stats.qabul }})
+                        </a>
+                        <a class="filter-tab {% if status_filter == 'bekor_qilindi' %}active{% endif %}" href="{% url 'admin_arizalar' %}?status=bekor_qilindi{% if query %}&q={{ query }}{% endif %}">
+                            Bekor qilindi ({{ stats.bekor }})
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ism familiya</th>
+                                <th>Telefon</th>
+                                <th>Qiziqqan kursi</th>
+                                <th>Telegram</th>
+                                <th>Vaqti</th>
+                                <th>Izoh</th>
+                                <th>Holati</th>
+                                <th>Holatni o‘zgartirish</th>
+                                <th>Amal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for ariza in arizalar %}
+                            <tr>
+                                <td><strong>{{ ariza.full_name }}</strong></td>
+                                <td><a href="tel:{{ ariza.phone }}" style="color:var(--blue); font-weight:700;">{{ ariza.phone }}</a></td>
+                                <td>{{ ariza.course|default:"—" }}</td>
+                                <td>
+                                    {% if ariza.telegram_username %}
+                                        <a href="https://t.me/{{ ariza.telegram_username|cut:'@' }}" target="_blank" style="color:var(--blue);">@{{ ariza.telegram_username|cut:'@' }}</a>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td><small>{{ ariza.created_at|date:"d.m.Y H:i" }}</small></td>
+                                <td style="max-width:200px; white-space:normal; font-size:12px; color:var(--muted);">{{ ariza.note|default:"—" }}</td>
+                                <td>
+                                    {% if ariza.status == 'yangi' %}
+                                        <span class="status-pill warning">{{ ariza.get_status_display }}</span>
+                                    {% elif ariza.status == 'boglanildi' %}
+                                        <span class="status-pill info">{{ ariza.get_status_display }}</span>
+                                    {% elif ariza.status == 'qabul_qilindi' %}
+                                        <span class="status-pill">{{ ariza.get_status_display }}</span>
+                                    {% else %}
+                                        <span class="status-pill inactive">{{ ariza.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        {% if ariza.status != 'boglanildi' %}
+                                            <form class="inline-form" method="post" action="{% url 'admin_ariza_status' ariza.id 'boglanildi' %}">
+                                                {% csrf_token %}
+                                                <button class="row-action" type="submit" title="Bog‘lanildi deb belgilash">📞 Bog‘landim</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if ariza.status != 'qabul_qilindi' %}
+                                            <form class="inline-form" method="post" action="{% url 'admin_ariza_status' ariza.id 'qabul_qilindi' %}">
+                                                {% csrf_token %}
+                                                <button class="row-action" style="color:#15803d; background:#ecfdf5; border-color:#a7f3d0;" type="submit" title="Qabul qilindi">✓ Qabul</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if ariza.status != 'bekor_qilindi' %}
+                                            <form class="inline-form" method="post" action="{% url 'admin_ariza_status' ariza.id 'bekor_qilindi' %}">
+                                                {% csrf_token %}
+                                                <button class="row-action" style="color:#6b7280; background:#f3f4f6;" type="submit" title="Bekor qilish">✕ Rad</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <form class="inline-form" method="post" action="{% url 'admin_ariza_delete' ariza.id %}" onsubmit="return confirm('Arizani o‘chirishni tasdiqlaysizmi?')">
+                                        {% csrf_token %}
+                                        <button class="delete-action" type="submit">O‘chirish</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td class="empty" colspan="9">Hech qanday ariza topilmadi.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% elif page == "groups" %}
+            <section class="panel">
+                <header class="section-title list-toolbar">
+                    <div><h2>Guruhlar ro‘yxati</h2><span>{{ groups_count }} ta guruh</span></div>
+                    <div class="row-actions">
+                        <form class="search-form" method="get">
+                            <input type="search" name="q" value="{{ query }}" placeholder="Guruh, fan yoki o‘qituvchi..." aria-label="Guruhlarni qidirish">
+                            <button type="submit">Qidirish</button>
+                        </form>
+                        <a class="primary-action" href="{% url 'admin_group_create' %}">+ Yangi guruh ochish</a>
+                    </div>
+                </header>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead><tr><th>Guruh</th><th>Fan</th><th>O‘qituvchi</th><th>Dars vaqti</th><th>Xona</th><th>O‘quvchilar</th><th>Holati</th><th>Boshqarish</th></tr></thead>
+                        <tbody>
+                        {% for group in groups %}
+                            <tr>
+                                <td><strong>{{ group.name }}</strong><small>{{ group.start_date|date:"d.m.Y" }}</small></td>
+                                <td>{{ group.subject }}</td>
+                                <td>{{ group.teacher.full_name|default:group.teacher.username }}</td>
+                                <td>{{ group.lesson_days }} · {{ group.lesson_time|time:"H:i" }}</td>
+                                <td>{{ group.room }}</td>
+                                <td><a class="row-action" href="{% url 'admin_group_students' group.id %}">{{ group.active_students_count }} ko‘rish</a></td>
+                                <td><span class="status-pill{% if not group.is_active %} inactive{% endif %}">{% if group.is_active %}Faol{% else %}Nofaol{% endif %}</span></td>
+                                <td>
+                                    <div class="group-actions">
+                                        <a class="row-action" href="{% url 'admin_group_edit' group.id %}">Tahrirlash</a>
+                                        <a class="row-action" href="{% url 'admin_group_students' group.id %}">Davomat / o‘quvchilar</a>
+                                        <form class="inline-form" method="post" action="{% url 'admin_group_delete' group.id %}" onsubmit="return confirm('Guruhni o‘chirish yoki o‘quvchilar tarixi bo‘lsa arxivlashni tasdiqlaysizmi?')">
+                                            {% csrf_token %}
+                                            <button class="delete-action" type="submit">O‘chirish</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td class="empty" colspan="8">Hozircha guruh topilmadi.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% elif page == "group_form" %}
+            <section class="panel">
+                <header class="section-title"><div><h2>{{ form_title }}</h2><span>Guruh ma’lumotlarini kiriting</span></div></header>
+                {% if form.non_field_errors %}<div class="form-alert">{{ form.non_field_errors }}</div>{% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-layout">
+                        {% for field in form %}
+                            <div class="form-field">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-actions">
+                        <a class="secondary-action" href="{% url 'admin_groups' %}">Bekor qilish</a>
+                        <button class="primary-action" type="submit">Saqlash</button>
+                    </div>
+                </form>
+            </section>
+        {% elif page == "group_students" %}
+            <section class="stats" aria-label="Guruh statistikasi">
+                <div class="stat"><div class="stat-label">Guruh</div><div class="stat-value">{{ group.name }}</div></div>
+                <div class="stat"><div class="stat-label">Fan</div><div class="stat-value">{{ group.subject }}</div></div>
+                <div class="stat"><div class="stat-label">Faol o‘quvchilar</div><div class="stat-value">{{ active_students_count }}</div></div>
+                <div class="stat"><div class="stat-label">Ro‘yxatdagi a’zoliklar</div><div class="stat-value">{{ students_count }}</div></div>
+            </section>
+            <section class="panel">
+                <header class="section-title list-toolbar">
+                    <div>
+                        <h2>{{ group.name }} — o‘quvchilar</h2>
+                        <span>{{ group.teacher.full_name }} · {{ group.lesson_days }} · {{ group.lesson_time|time:"H:i" }}</span>
+                    </div>
+                    <div class="row-actions">
+                        <form class="search-form" method="get">
+                            <input type="search" name="q" value="{{ query }}" placeholder="Ism, telefon yoki username..." aria-label="Guruh o‘quvchilarini qidirish">
+                            <button type="submit">Qidirish</button>
+                        </form>
+                        <a class="secondary-action" href="{% url 'admin_groups' %}">Guruhlarga qaytish</a>
+                    </div>
+                </header>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead><tr><th>O‘quvchi</th><th>Telefon</th><th>A’zo bo‘lgan sana</th><th>Holati</th><th>Chegirma</th><th>To‘langan</th></tr></thead>
+                        <tbody>
+                        {% for enrollment in enrollments %}
+                            <tr>
+                                <td><strong>{{ enrollment.student.user.full_name|default:enrollment.student.user.username }}</strong><small>@{{ enrollment.student.user.username }}</small></td>
+                                <td>{{ enrollment.student.user.phone|default:"—" }}</td>
+                                <td>{{ enrollment.start_date|date:"d.m.Y" }}</td>
+                                <td><span class="status-pill{% if enrollment.status != 'active' %} inactive{% endif %}">{{ enrollment.get_status_display }}</span></td>
+                                <td>{{ enrollment.discount_percent }}%</td>
+                                <td>{{ enrollment.total_paid|default:0 }} so‘m</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td class="empty" colspan="6">Bu guruhda hali o‘quvchilar yo‘q.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% elif page == "lesson_form" or page == "payment_form" or page == "teacher_form" or page == "student_form" or page == "enroll_form" %}
+            <section class="panel">
+                <header class="section-title"><div><h2>{{ form_title }}</h2><span>{% if page == "teacher_form" %}Yangi o‘qituvchining login ma’lumotlarini kiriting{% elif page == "payment_form" %}To‘lov ma’lumotlarini kiriting{% elif page == "student_form" %}Yangi o‘quvchi ma’lumotlari va parolini kiriting{% elif page == "enroll_form" %}O‘quvchini guruhga biriktirish shartlarini kiriting{% else %}Dars sanasi va mavzusini kiriting{% endif %}</span></div></header>
+                {% if form.non_field_errors %}<div class="form-alert">{{ form.non_field_errors }}</div>{% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-layout">
+                        {% for field in form %}
+                            <div class="form-field">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-actions">
+                        <a class="secondary-action" href="{% if page == 'payment_form' %}{% url 'admin_payments' %}{% elif page == 'teacher_form' %}{% url 'admin_teachers' %}{% elif page == 'student_form' or page == 'enroll_form' %}{% url 'admin_students' %}{% else %}{% url 'admin_attendance' %}{% endif %}">Bekor qilish</a>
+                        <button class="primary-action" type="submit">{% if page == "payment_form" %}To‘lovni saqlash{% elif page == "teacher_form" %}O‘qituvchini yaratish{% elif page == "student_form" %}O‘quvchini saqlash{% elif page == "enroll_form" %}Guruhga biriktirish{% else %}Darsni saqlash{% endif %}</button>
+                    </div>
+                </form>
+            </section>
+        {% elif page == "teachers" %}
+            <section class="panel">
+                <header class="section-title list-toolbar">
+                    <div><h2>O‘qituvchilar</h2><span>{{ teachers_count }} ta faol o‘qituvchi</span></div>
+                    <a class="primary-action" href="{% url 'admin_teacher_create' %}">+ O‘qituvchi qo‘shish</a>
+                </header>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead><tr><th>F.I.Sh</th><th>Login</th><th>Telefon</th><th>Email</th><th>Faol guruhlar</th><th>Amal</th></tr></thead>
+                        <tbody>
+                        {% for teacher in teachers %}
+                            <tr>
+                                <td><strong>{{ teacher.full_name }}</strong></td>
+                                <td>@{{ teacher.username }}</td>
+                                <td>{{ teacher.phone }}</td>
+                                <td>{{ teacher.email|default:"—" }}</td>
+                                <td>{{ teacher.active_groups_count }}</td>
+                                <td>
+                                    <form class="inline-form" method="post" action="{% url 'admin_teacher_delete' teacher.id %}" onsubmit="return confirm('O‘qituvchini o‘chirish yoki tarixga bog‘langan bo‘lsa nofaol qilishni tasdiqlaysizmi?')">
+                                        {% csrf_token %}
+                                        <button class="delete-action" type="submit">O‘chirish / nofaol</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td class="empty" colspan="6">Faol o‘qituvchi yo‘q. “O‘qituvchi qo‘shish” tugmasidan boshlang.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% elif page == "payments" %}
+            <section class="panel">
+                <header class="section-title list-toolbar">
+                    <div><h2>To‘lovlar tarixi</h2><span>Jami: {{ payments_sum }} so‘m</span></div>
+                    <a class="primary-action" href="{% url 'admin_payment_create' %}">+ To‘lov qayd etish</a>
+                </header>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead><tr><th>O‘quvchi</th><th>Guruh</th><th>To‘langan sana</th><th>Davr</th><th>Usul</th><th>Kvitansiya</th><th>Summa</th><th>Amal</th></tr></thead>
+                        <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td><strong>{{ payment.enrollment.student.user.full_name }}</strong></td>
+                                <td>{{ payment.enrollment.group.name }}</td>
+                                <td>{{ payment.paid_at|date:"d.m.Y" }}</td>
+                                <td>{{ payment.period|date:"m.Y" }}</td>
+                                <td>{{ payment.get_method_display }}</td>
+                                <td>{{ payment.receipt_no|default:"—" }}</td>
+                                <td><strong>{{ payment.amount }} so‘m</strong></td>
+                                <td>
+                                    <form class="inline-form" method="post" action="{% url 'admin_payment_delete' payment.id %}" onsubmit="return confirm('To‘lov yozuvini o‘chirishni tasdiqlaysizmi?')">
+                                        {% csrf_token %}
+                                        <button class="delete-action" type="submit">O‘chirish</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td class="empty" colspan="8">Hozircha to‘lov qayd etilmagan.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% elif page == "students" %}
+            <section class="panel">
+                <header class="section-title list-toolbar">
+                    <div><h2>O‘quvchilar ro‘yxati</h2><span>{{ students_count }} ta o‘quvchi</span></div>
+                    <div class="row-actions">
+                        <form class="search-form" method="get">
+                            <input type="search" name="q" value="{{ query }}" placeholder="Ism, telefon yoki email..." aria-label="O‘quvchilarni qidirish">
+                            <button type="submit">Qidirish</button>
+                        </form>
+                        <a class="primary-action" href="{% url 'admin_student_create' %}">+ Yangi o‘quvchi</a>
+                    </div>
+                </header>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead><tr><th>O‘quvchi</th><th>Telefon</th><th>Email</th><th>Faol guruhlar</th><th>Ro‘yxatdan o‘tgan</th><th>Amallar</th></tr></thead>
+                        <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td><strong>{{ student.user.full_name|default:student.user.username }}</strong><small>@{{ student.user.username }}</small></td>
+                                <td>{{ student.user.phone|default:"—" }}</td>
+                                <td>{{ student.user.email|default:"—" }}</td>
+                                <td>{{ student.active_groups_count }}</td>
+                                <td>{{ student.created_at|date:"d.m.Y" }}</td>
+                                <td>
+                                    <div class="row-actions">
+                                        {% if student.id %}
+                                        <a class="row-action" href="{% url 'admin_student_enroll' student.id %}">+ Biriktirish</a>
+                                        <form class="inline-form" method="post" action="{% url 'admin_student_delete' student.id %}" onsubmit="return confirm('O‘quvchini o‘chirish yoki nofaol qilishni tasdiqlaysizmi?')">
+                                            {% csrf_token %}
+                                            <button class="delete-action" type="submit">O‘chirish</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td class="empty" colspan="6">Hozircha o‘quvchi topilmadi.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% elif page == "attendance" %}
+            <section class="panel">
+                <header class="section-title">
+                    <div><h2>Guruhni tanlang</h2><span>Guruhni bosing, so‘ng ro‘yxatdan davomatni belgilang</span></div>
+                    {% if selected_group %}<a class="secondary-action" href="{% url 'admin_lesson_create' %}">Darsni alohida qo‘shish</a>{% endif %}
+                </header>
+                <div class="model-grid">
+                    {% for item in groups %}
+                        <a class="model-card" href="{% url 'admin_attendance' %}?group={{ item.id }}">
+                            <div class="model-info"><strong>{{ item.name }}</strong><small>{{ item.subject }} · {{ item.teacher.full_name }} · {{ item.lesson_days }} {{ item.lesson_time|time:"H:i" }}</small></div>
+                            <div class="model-actions"><span>{{ item.active_students_count }} o‘quvchi →</span></div>
+                        </a>
+                    {% empty %}
+                        <p class="empty">Faol guruh yo‘q. Avval guruh qo‘shib, unga o‘quvchilarni biriktiring.</p>
+                    {% endfor %}
+                </div>
+                {% if selected_group or lesson or students %}
+                    <header class="section-title">
+                        <div><h2>{% if selected_group %}{{ selected_group.name }} — o‘quvchilar davomati{% else %}Davomat olish{% endif %}</h2><span>{% if selected_group %}{{ selected_group.subject }} · {{ selected_group.teacher.full_name }}{% else %}Dars bo‘yicha davomat{% endif %}</span></div>
+                    </header>
+                    {% if form_error %}<div class="form-alert">{{ form_error }}</div>{% endif %}
+                    {% if selected_group %}
+                    <form class="attendance-picker" method="get">
+                        <input type="hidden" name="group" value="{{ selected_group.id }}">
+                        <div class="form-field">
+                            <label for="lesson-date">Dars sanasi</label>
+                            <input id="lesson-date" type="date" name="date" value="{{ lesson_date|date:'Y-m-d' }}" required>
+                        </div>
+                        <button class="primary-action" type="submit">Ro‘yxatni ko‘rsatish</button>
+                    </form>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if selected_group %}<input type="hidden" name="group_id" value="{{ selected_group.id }}">{% endif %}
+                        {% if lesson_date %}<input type="hidden" name="lesson_date" value="{{ lesson_date|date:'Y-m-d' }}">{% endif %}
+                        {% if lesson %}<p class="empty">Dars: {{ lesson.topic|default:"Davomat" }} · {{ lesson.date|date:"d.m.Y" }}</p>{% else %}<p class="empty">Tanlangan sana uchun davomat saqlanganda dars yozuvi avtomatik yaratiladi.</p>{% endif %}
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead><tr><th>O‘quvchi</th><th>Telefon</th><th>Davomat holati</th></tr></thead>
+                                <tbody>
+                                {% for student in students %}
+                                    <tr>
+                                        <td><strong>{{ student.user.full_name|default:student.user.username }}</strong></td>
+                                        <td>{{ student.user.phone|default:"—" }}</td>
+                                        <td>
+                                            <select class="attendance-status" name="status_{{ student.id }}" aria-label="{{ student.user.full_name }} davomat holati" required>
+                                                {% for value, label in attendance_statuses %}
+                                                    <option value="{{ value }}"{% if student.attendance_status == value %} selected{% endif %}>{{ label }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr><td class="empty" colspan="3">Bu dars uchun faol o‘quvchilar topilmadi.</td></tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if students %}<div class="form-actions"><button class="primary-action" type="submit">Davomatni saqlash</button></div>{% endif %}
+                    </form>
+                {% endif %}
+            </section>
+        {% else %}
+            <section class="panel"><p class="empty">Sahifa topilmadi.</p></section>
+        {% endif %}
+    </div>
+</main>
+</body>
+</html>

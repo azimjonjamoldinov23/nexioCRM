@@ -1,0 +1,104 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+        #content { max-width: 1600px; }
+        #content-main { min-width: 0; }
+        #changelist {
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+        }
+        #changelist .changelist-form-container { min-width: 0; }
+        #changelist .results { overflow-x: auto; padding: 0 16px 10px; }
+        #changelist table {
+            width: 100%;
+            min-width: 760px;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        #changelist table thead th {
+            padding: 12px 14px;
+            border: 0;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        #changelist table tbody tr {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, .045);
+            outline: 1px solid #e9edf4;
+        }
+        #changelist table tbody tr:hover { background: #f8fbff; }
+        #changelist table tbody td,
+        #changelist table tbody th {
+            padding: 14px;
+            border: 0;
+            border-top: 1px solid #e9edf4;
+            border-bottom: 1px solid #e9edf4;
+            color: #253047;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+        #changelist table tbody tr > :first-child {
+            border-left: 1px solid #e9edf4;
+            border-radius: 10px 0 0 10px;
+        }
+        #changelist table tbody tr > :last-child {
+            border-right: 1px solid #e9edf4;
+            border-radius: 0 10px 10px 0;
+        }
+        #changelist .paginator {
+            margin: 0;
+            padding: 16px 20px;
+            border-top: 1px solid #e5e7eb;
+            background: #fff;
+        }
+        #changelist #toolbar,
+        #changelist .actions,
+        #changelist-filter {
+            border-color: #e5e7eb;
+        }
+        #changelist #toolbar {
+            margin: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+        #changelist .actions {
+            margin: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+        #changelist-filter {
+            margin-left: 18px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #fff;
+        }
+        #changelist-filter h2 {
+            border-radius: 9px;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        .object-tools a,
+        .object-tools a:link,
+        .object-tools a:visited {
+            border-radius: 9px;
+            background: #2563eb;
+        }
+        .object-tools a:hover { background: #1d4ed8; }
+        @media (max-width: 767px) {
+            #content { padding: 16px 12px; }
+            #changelist-filter { margin: 12px; }
+            #changelist .results { padding: 0 10px 8px; }
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,1460 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profil — NEXIO.CRM</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-light: #eff6ff;
+            --bg: #f5f7fb;
+            --white: #ffffff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --red: #dc2626;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px 28px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 19px;
+        }
+
+        .logo-text h2 {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .logo-text span {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .menu-title {
+            color: #9ca3af;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin: 10px 0;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 13px;
+            border-radius: 11px;
+            color: #596273;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .nav a:hover {
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+
+        .nav a.active {
+            background: var(--blue);
+            color: white;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, .22);
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .help-card {
+            background: var(--blue-light);
+            border: 1px solid #dbeafe;
+            padding: 16px;
+            border-radius: 14px;
+        }
+
+        .help-card strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .help-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .help-card a {
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 78px;
+            background: rgba(255, 255, 255, .96);
+            border-bottom: 1px solid var(--border);
+            padding: 0 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .mobile-menu {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .title h1 {
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .title p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-button {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 11px;
+            font-size: 17px;
+            transition: .2s;
+        }
+
+        .top-button:hover {
+            background: var(--blue-light);
+            border-color: #bfdbfe;
+            color: var(--blue);
+        }
+
+        .user-mini {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-left: 5px;
+        }
+
+        .avatar-small {
+            width: 39px;
+            height: 39px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .avatar-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-mini strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .user-mini span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            max-width: 1200px;
+            padding: 30px 34px 50px;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+        }
+
+        /* ================= PROFILE CARD ================= */
+
+        .profile-card {
+            padding: 28px 22px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: 800;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, .22);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .profile-card h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .profile-card .username {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 18px;
+        }
+
+        .role {
+            display: inline-flex;
+            padding: 6px 12px;
+            background: var(--blue-light);
+            color: var(--blue);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .profile-info {
+            margin-top: 25px;
+            border-top: 1px solid var(--border);
+            padding-top: 17px;
+            text-align: left;
+        }
+
+        .profile-info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .profile-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-row span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .profile-info-row strong {
+            font-size: 11px;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-card {
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 23px 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-header h2 {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .form-header p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-body {
+            padding: 25px;
+        }
+
+        /* ================= MESSAGES ================= */
+
+        .success-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ================= FORM GRID ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: #9ca3af;
+            z-index: 2;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 47px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            padding: 0 13px 0 40px;
+            font-size: 13px;
+            color: var(--text);
+            background: white;
+            transition: .2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .09);
+        }
+
+        .form-group input:disabled {
+            background: #f9fafb;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* FILE INPUT */
+
+        .file-input {
+            padding-top: 12px !important;
+            padding-right: 10px !important;
+            cursor: pointer;
+        }
+
+        .file-input::-webkit-file-upload-button {
+            border: none;
+            background: var(--blue-light);
+            color: var(--blue);
+            border-radius: 7px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 6px;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .form-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 19px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+            box-shadow: 0 7px 16px rgba(37, 99, 235, .18);
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ================= SECURITY ================= */
+
+        .security {
+            margin-top: 22px;
+            padding: 20px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .security-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .security-icon {
+            width: 42px;
+            height: 42px;
+            background: #ecfdf5;
+            color: var(--green);
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .security-left strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .security-left span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 950px) {
+
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-card {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                gap: 18px;
+                padding: 20px;
+            }
+
+            .profile-avatar {
+                margin: 0;
+                width: 75px;
+                height: 75px;
+                font-size: 27px;
+                flex-shrink: 0;
+            }
+
+            .profile-info {
+                display: none;
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .25s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-menu {
+                display: block;
+                margin-right: 10px;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 22px 18px 40px;
+            }
+
+            .user-mini div:last-child {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-body {
+                padding: 20px;
+            }
+
+            .form-footer {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .security {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .security .btn {
+                width: auto;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .title h1 {
+                font-size: 19px;
+            }
+
+            .title p {
+                display: none;
+            }
+
+            .top-button {
+                width: 38px;
+                height: 38px;
+            }
+
+            .profile-card {
+                padding: 18px;
+            }
+
+            .profile-avatar {
+                width: 65px;
+                height: 65px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            N
+        </div>
+
+        <div class="logo-text">
+            <h2>NEXIO</h2>
+            <span>EDUCATION CRM</span>
+        </div>
+
+    </div>
+
+    <div class="menu-title">
+        Asosiy
+    </div>
+
+    <nav class="nav">
+
+        <a href="{% url 'index' %}">
+            <span class="nav-icon">⌂</span>
+            <span>Bosh sahifa</span>
+        </a>
+
+        <a href="{% url 'profil' %}" class="active">
+            <span class="nav-icon">◉</span>
+            <span>Profil</span>
+        </a>
+
+        <a href="{% url 'guruhlarim' %}">
+            <span class="nav-icon">▣</span>
+            <span>Guruhlarim</span>
+        </a>
+
+        <a href="{% url 'darslarim' %}">
+            <span class="nav-icon">▤</span>
+            <span>Darslarim</span>
+        </a>
+
+        <a href="{% url 'davomatim' %}">
+            <span class="nav-icon">✓</span>
+            <span>Davomat</span>
+        </a>
+
+        <a href="{% url 'reyting' %}">
+            <span class="nav-icon">★</span>
+            <span>Reytingim</span>
+        </a>
+
+        <a href="{% url 'chat' %}">
+            <span class="nav-icon">☵</span>
+            <span>Chat</span>
+        </a>
+
+        <div class="menu-title">
+            Qo‘shimcha
+        </div>
+
+        <a href="{% url 'tolov' %}">
+            <span class="nav-icon">₽</span>
+            <span>To‘lovlarim</span>
+        </a>
+
+        <a href="#">
+            <span class="nav-icon">♢</span>
+            <span>Bildirishnomalar</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="help-card">
+
+            <strong>
+                Yordam kerakmi?
+            </strong>
+
+            <p>
+                Savollaringiz bo‘lsa administrator
+                bilan bog‘lanishingiz mumkin.
+            </p>
+
+            <a href="{% url 'chat' %}">
+                Chatga o‘tish →
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div style="display:flex;align-items:center;">
+
+            <button
+                class="mobile-menu"
+                onclick="toggleSidebar()"
+                type="button">
+                ☰
+            </button>
+
+            <div class="title">
+
+                <h1>
+                    Profil
+                </h1>
+
+                <p>
+                    Shaxsiy ma'lumotlaringizni boshqaring
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="top-actions">
+
+            <a
+                href="{% url 'chat' %}"
+                class="top-button"
+                title="Chat">
+                💬
+            </a>
+
+            <a
+                href="#"
+                class="top-button"
+                title="Bildirishnomalar">
+                🔔
+            </a>
+
+
+            <div class="user-mini">
+
+                <div class="avatar-small">
+
+                    {% if profile.rasm %}
+
+                        <img
+                            src="{{ profile.rasm.url }}"
+                            alt="Profil rasmi">
+
+                    {% else %}
+
+                        {% if user_profile.first_name %}
+                            {{ user_profile.first_name|first|upper }}
+                        {% else %}
+                            {{ user_profile.username|first|upper }}
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+
+                        {% if user_profile.get_full_name %}
+
+                            {{ user_profile.get_full_name }}
+
+                        {% else %}
+
+                            {{ user_profile.username }}
+
+                        {% endif %}
+
+                    </strong>
+
+                    <span>
+                        O‘quvchi
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+
+    <section class="content">
+
+        <div class="profile-layout">
+
+
+            <!-- ================= PROFILE INFO ================= -->
+
+            <div class="card profile-card">
+
+                <div class="profile-avatar">
+
+                    {% if profile.rasm %}
+
+                        <img
+                            src="{{ profile.rasm.url }}"
+                            alt="Profil rasmi">
+
+                    {% else %}
+
+                        {% if profile.first_name %}
+
+                            {{ profile.first_name|first|upper }}
+
+                        {% elif user_profile.first_name %}
+
+                            {{ user_profile.first_name|first|upper }}
+
+                        {% else %}
+
+                            {{ user_profile.username|first|upper }}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+
+                <div style="flex:1;">
+
+                    <h2>
+
+                        {% if profile.first_name or profile.last_name %}
+
+                            {{ profile.first_name }}
+                            {{ profile.last_name }}
+
+                        {% elif user_profile.get_full_name %}
+
+                            {{ user_profile.get_full_name }}
+
+                        {% else %}
+
+                            {{ user_profile.username }}
+
+                        {% endif %}
+
+                    </h2>
+
+
+                    <div class="username">
+                        @{{ user_profile.username }}
+                    </div>
+
+
+                    <div class="role">
+                        🎓 O‘quvchi
+                    </div>
+
+
+                    <div class="profile-info">
+
+                        <div class="profile-info-row">
+
+                            <span>
+                                Login
+                            </span>
+
+                            <strong>
+                                {{ user_profile.username }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-row">
+
+                            <span>
+                                Email
+                            </span>
+
+                            <strong>
+                                {{ user_profile.email|default:"Kiritilmagan" }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-info-row">
+
+                            <span>
+                                Telefon
+                            </span>
+
+                            <strong>
+                                {{ profile.phone_number|default:"Kiritilmagan" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= EDIT PROFILE ================= -->
+
+            <div class="card form-card">
+
+                <div class="form-header">
+
+                    <h2>
+                        Profil ma'lumotlari
+                    </h2>
+
+                    <p>
+                        Quyidagi ma'lumotlarni o‘zgartirishingiz mumkin.
+                    </p>
+
+                </div>
+
+
+                <div class="form-body">
+
+
+                    <!-- DJANGO MESSAGES -->
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="success-message">
+
+                                ✓
+
+                                <span>
+                                    {{ message }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+
+                    <!-- FORM -->
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+                        <div class="form-grid">
+
+
+                            <!-- ISM -->
+
+                            <div class="form-group">
+
+                                <label for="first_name">
+
+                                    Ism
+
+                                    <span class="required">*</span>
+
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        👤
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="first_name"
+                                        name="first_name"
+                                        value="{{ user_profile.first_name }}"
+                                        placeholder="Ismingizni kiriting"
+                                        required>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- FAMILIYA -->
+
+                            <div class="form-group">
+
+                                <label for="last_name">
+
+                                    Familiya
+
+                                    <span class="required">*</span>
+
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        👤
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="last_name"
+                                        name="last_name"
+                                        value="{{ user_profile.last_name }}"
+                                        placeholder="Familiyangizni kiriting"
+                                        required>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="form-group">
+
+                                <label for="email">
+                                    Email
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        ✉
+                                    </span>
+
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value="{{ user_profile.email }}"
+                                        placeholder="example@gmail.com">
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- TELEFON -->
+
+                            <div class="form-group">
+
+                                <label for="phone_number">
+                                    Telefon raqam
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        ☎
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="phone_number"
+                                        name="phone_number"
+                                        value="{{ profile.phone_number|default:'' }}"
+                                        placeholder="+998 90 123 45 67">
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= PROFIL RASMI ================= -->
+
+                            <div class="form-group full">
+
+                                <label for="rasm">
+                                    Profil rasmi
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        📷
+                                    </span>
+
+                                    <input
+                                        type="file"
+                                        id="rasm"
+                                        name="rasm"
+                                        accept="image/*"
+                                        class="file-input">
+
+                                </div>
+
+
+                                <div class="hint">
+                                    JPG, PNG, WEBP yoki boshqa rasm formatini tanlang.
+                                </div>
+
+                            </div>
+
+
+                            <!-- USERNAME (endi o'zgartirsa bo'ladi) -->
+
+                            <div class="form-group full">
+
+                                <label for="username">
+
+                                    Foydalanuvchi nomi
+
+                                    <span class="required">*</span>
+
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        @
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        name="username"
+                                        value="{{ user_profile.username }}"
+                                        placeholder="Yangi login kiriting"
+                                        autocomplete="username"
+                                        required>
+
+                                </div>
+
+
+                                <div class="hint">
+                                    Login nomini shu yerdan o‘zgartirishingiz mumkin.
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= PAROL ================= -->
+
+                            <div class="form-group full" id="parol">
+
+                                <label for="old_password">
+                                    Joriy parol
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        🔒
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        id="old_password"
+                                        name="old_password"
+                                        placeholder="Joriy parolingiz"
+                                        autocomplete="current-password">
+
+                                </div>
+
+
+                                <div class="hint">
+                                    Parolni o‘zgartirmoqchi bo‘lmasangiz, parol maydonlarini bo‘sh qoldiring.
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="new_password">
+                                    Yangi parol
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        🔒
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        id="new_password"
+                                        name="new_password"
+                                        placeholder="Yangi parol"
+                                        autocomplete="new-password">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="confirm_password">
+                                    Yangi parolni takrorlang
+                                </label>
+
+
+                                <div class="input-wrap">
+
+                                    <span class="input-icon">
+                                        🔒
+                                    </span>
+
+                                    <input
+                                        type="password"
+                                        id="confirm_password"
+                                        name="confirm_password"
+                                        placeholder="Yangi parolni qayta kiriting"
+                                        autocomplete="new-password">
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="form-footer">
+
+                            <a
+                                href="{% url 'index' %}"
+                                class="btn btn-secondary">
+
+                                Bekor qilish
+
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary">
+
+                                ✓ &nbsp; Saqlash
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= SECURITY ================= -->
+
+        <div class="card security">
+
+            <div class="security-left">
+
+                <div class="security-icon">
+                    🔒
+                </div>
+
+                <div>
+
+                    <strong>
+                        Hisob xavfsizligi
+                    </strong>
+
+                    <span>
+                        Profil ma'lumotlaringiz himoyalangan.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="#parol"
+                class="btn btn-secondary">
+
+                Parolni o‘zgartirish
+
+            </a>
+
+        </div>
+
+
+    </section>
+
+</main>
+
+
+<script>
+
+    function toggleSidebar() {
+
+        const sidebar = document.getElementById("sidebar");
+
+        sidebar.classList.toggle("open");
+
+    }
+
+
+    document.addEventListener("click", function(event) {
+
+        const sidebar = document.getElementById("sidebar");
+
+        const button = document.querySelector(".mobile-menu");
+
+
+        if (
+            window.innerWidth <= 800 &&
+            sidebar.classList.contains("open") &&
+            !sidebar.contains(event.target) &&
+            !button.contains(event.target)
+        ) {
+
+            sidebar.classList.remove("open");
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

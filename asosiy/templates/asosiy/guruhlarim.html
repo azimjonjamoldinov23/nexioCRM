@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mening guruhim — NEXIO.CRM</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-light: #eff6ff;
+            --white: #ffffff;
+            --bg: #f5f7fb;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px 25px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, 0.25);
+        }
+
+        .logo-text h2 {
+            font-size: 18px;
+            color: #111827;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 10px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0 13px;
+            margin: 18px 0 8px;
+            letter-spacing: .5px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            border-radius: 11px;
+            text-decoration: none;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .nav a:hover {
+            background: #f1f5f9;
+            color: var(--blue);
+        }
+
+        .nav a.active {
+            background: var(--blue);
+            color: white;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, .20);
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .help-card {
+            margin-top: auto;
+            background: var(--blue-light);
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .help-card strong {
+            display: block;
+            font-size: 13px;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .help-card p {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .help-card a {
+            display: block;
+            text-align: center;
+            background: var(--blue);
+            color: white;
+            padding: 8px;
+            border-radius: 9px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            height: 78px;
+            background: rgba(255,255,255,.92);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            backdrop-filter: blur(10px);
+        }
+
+        .topbar-left h1 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .topbar-left p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #475569;
+            font-size: 17px;
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-left: 5px;
+            padding-left: 12px;
+            border-left: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .profile-mini span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 30px 34px 50px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        /* ================= MESSAGES ================= */
+
+        .alert {
+            padding: 14px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-warning {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            color: #172033;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .header-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-badge {
+            background: #f1f5f9;
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .header-badge strong {
+            color: var(--blue);
+        }
+
+        /* ================= SECTION ================= */
+
+        .section-header {
+            margin: 35px 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-pill {
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* ================= GROUPS ================= */
+
+        .groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        .group-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: .3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 330px;
+        }
+
+        .group-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(15,23,42,.10);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 54px;
+            height: 54px;
+            background: #dbeafe;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .group-card h2 {
+            font-size: 20px;
+            margin-bottom: 14px;
+            color: #172554;
+        }
+
+        .info {
+            color: #64748b;
+            font-size: 14px;
+            margin: 9px 0;
+            line-height: 1.4;
+        }
+
+        .info b {
+            color: #334155;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .join-btn {
+            display: block;
+            width: 100%;
+            background: var(--blue);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 18px;
+            transition: .25s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .join-btn:hover {
+            background: var(--blue-dark);
+            transform: translateY(-2px);
+        }
+
+        .enrolled-btn {
+            background: #ecfdf5 !important;
+            color: #065f46 !important;
+            border: 1px solid #a7f3d0 !important;
+            cursor: default !important;
+            transform: none !important;
+        }
+
+        .leave-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #ef4444;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+            padding: 6px;
+            border-radius: 8px;
+            transition: .2s;
+        }
+
+        .leave-link:hover {
+            background: #fee2e2;
+            text-decoration: underline;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            background: white;
+            border-radius: 20px;
+            padding: 45px 25px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px dashed #cbd5e1;
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .empty p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* ================= MOBILE MENU ================= */
+
+        .mobile-menu {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .25s;
+                box-shadow: 10px 0 30px rgba(0,0,0,.08);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-menu {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .topbar-left {
+                display: none;
+            }
+
+            .content {
+                padding: 20px 18px 40px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .groups {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-mini span {
+                display: none;
+            }
+
+            .header-badge {
+                flex: 1;
+                text-align: center;
+            }
+        }
+
+        /* ================= SUBTLE MODERN ANIMATIONS ================= */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .stats-grid .stat-box:nth-child(1) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+        .stats-grid .stat-box:nth-child(2) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
+        .stats-grid .stat-box:nth-child(3) { animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+
+        .group-card {
+            animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(37, 99, 235, 0.1);
+            border-color: #bfdbfe;
+        }
+
+        .btn-main, .btn-exit, .top-icon {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-main:active, .btn-exit:active, .top-icon:active {
+            transform: scale(0.97);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">N</div>
+
+        <div class="logo-text">
+            <h2>NEXIO</h2>
+            <span>EDUCATION CRM</span>
+        </div>
+    </div>
+
+    <div class="menu-title">Asosiy</div>
+
+    <nav class="nav">
+
+        <a href="{% url 'index' %}">
+            <span class="nav-icon">⌂</span>
+            <span>Bosh sahifa</span>
+        </a>
+
+        <a href="{% url 'profil' %}">
+            <span class="nav-icon">◉</span>
+            <span>Profil</span>
+        </a>
+
+        <a href="{% url 'guruhlarim' %}" class="active">
+            <span class="nav-icon">▣</span>
+            <span>Guruhlarim</span>
+        </a>
+
+        <a href="{% url 'darslarim' %}">
+            <span class="nav-icon">▤</span>
+            <span>Darslarim</span>
+        </a>
+
+        <a href="{% url 'davomatim' %}">
+            <span class="nav-icon">✓</span>
+            <span>Davomat</span>
+        </a>
+
+        <a href="{% url 'reyting' %}">
+            <span class="nav-icon">★</span>
+            <span>Reytingim</span>
+        </a>
+
+        <a href="{% url 'chat' %}">
+            <span class="nav-icon">☵</span>
+            <span>Chat</span>
+        </a>
+
+    </nav>
+
+    <div class="menu-title">Qo‘shimcha</div>
+
+    <nav class="nav">
+
+        <a href="{% url 'tolov' %}">
+            <span class="nav-icon">₽</span>
+            <span>To‘lovlarim</span>
+        </a>
+
+        <a href="#">
+            <span class="nav-icon">♢</span>
+            <span>Bildirishnomalar</span>
+        </a>
+
+        <a href="{% url 'profil' %}">
+            <span class="nav-icon">⚙</span>
+            <span>Sozlamalar</span>
+        </a>
+
+    </nav>
+
+    <div class="help-card">
+        <strong>💬 Yordam kerakmi?</strong>
+        <p>Muammo yoki savollaringiz bo‘lsa, administrator bilan bog‘laning.</p>
+        <a href="{% url 'chat' %}">Chatga o'tish</a>
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+        <div class="topbar-left">
+            <h1>Mening guruhlarim</h1>
+            <p>O‘quv guruhlaringizni boshqaring</p>
+        </div>
+
+        <div class="topbar-right">
+
+            <a href="{% url 'chat' %}" class="top-icon">
+                💬
+            </a>
+
+            <a href="#" class="top-icon">
+                🔔
+            </a>
+
+            <a href="{% url 'profil' %}" class="profile-mini">
+
+                <div class="avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <span>
+                    {{ request.user.first_name|default:request.user.username }}
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <div class="content">
+
+        <!-- XABARLAR -->
+
+        {% if messages %}
+            {% for message in messages %}
+
+                <div class="alert
+                    {% if message.tags == 'success' %}
+                        alert-success
+                    {% elif message.tags == 'warning' %}
+                        alert-warning
+                    {% else %}
+                        alert-info
+                    {% endif %}
+                ">
+
+                    {% if message.tags == 'success' %}
+                        ✅
+                    {% elif message.tags == 'warning' %}
+                        ⚠️
+                    {% else %}
+                        ℹ️
+                    {% endif %}
+
+                    <span>{{ message }}</span>
+
+                </div>
+
+            {% endfor %}
+        {% endif %}
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div>
+                <h1>👥 O‘quv guruhlari</h1>
+
+                <p>
+                    Siz a'zo bo'lgan guruhlar va markazdagi mavjud barcha kurslar
+                </p>
+            </div>
+
+            <div class="header-badges">
+
+                <div class="header-badge">
+                    Guruhlarim:
+                    <strong>{{ enrolled_count }} ta</strong>
+                </div>
+
+                <div class="header-badge">
+                    Barcha guruhlar:
+                    <strong>{{ total_count }} ta</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENING GURUHLARIM -->
+
+        <div class="section-header">
+
+            <div class="section-title">
+
+                <span>🎓 Mening guruhlarim</span>
+
+                <span class="badge-pill">
+                    {{ enrolled_count }} ta
+                </span>
+
+            </div>
+
+        </div>
+
+
+        {% if my_groups %}
+
+            <div class="groups">
+
+                {% for group in my_groups %}
+
+                    <div class="group-card">
+
+                        <div>
+
+                            <div class="card-top">
+
+                                <div class="icon">
+                                    🎓
+                                </div>
+
+                                <span class="status">
+                                    ● Faol a'zo
+                                </span>
+
+                            </div>
+
+
+                            <h2>
+                                {{ group.name }}
+                            </h2>
+
+
+                            {% if group.subject %}
+
+                                <div class="info">
+                                    📚 Fan / Yo‘nalish:
+                                    <b>{{ group.subject }}</b>
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.teacher %}
+
+                                <div class="info">
+                                    👨‍🏫 O‘qituvchi:
+                                    <b>
+                                        {{ group.teacher.full_name|default:group.teacher.username }}
+                                    </b>
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.room %}
+
+                                <div class="info">
+                                    🚪 Dars xonasi:
+                                    <b>{{ group.room }}</b>
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.lesson_days or group.lesson_time %}
+
+                                <div class="info">
+
+                                    🕐 Dars vaqti:
+
+                                    <b>
+
+                                        {% if group.lesson_days == "Mon Wed Fri" %}
+                                            D.Ch.Ju
+
+                                        {% elif group.lesson_days == "Tue Thu Sat" %}
+                                            S.P.Sh
+
+                                        {% elif group.lesson_days == "Du/Cho/Ju" %}
+                                            D.Ch.Ju
+
+                                        {% elif group.lesson_days == "Se/Pay/Sh" %}
+                                            S.P.Sh
+
+                                        {% elif group.lesson_days == "Mon Tue Wed Thu" %}
+                                            D.S.Ch.P
+
+                                        {% elif group.lesson_days == "Du/Se/Cho/Pay" %}
+                                            D.S.Ch.P
+
+                                        {% else %}
+                                            {{ group.lesson_days }}
+                                        {% endif %}
+
+
+                                        {% if group.lesson_time %}
+                                            • {{ group.lesson_time|time:"H:i" }}
+                                        {% endif %}
+
+                                    </b>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.monthly_price %}
+
+                                <div class="info">
+                                    💰 Oylik to‘lov:
+                                    <b>{{ group.monthly_price }} so‘m</b>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="join-btn enrolled-btn">
+                                ✅ Siz ushbu guruh a'zosisiz
+                            </div>
+
+                            <a
+                                href="{% url 'guruhdan_chiqish' group.id %}"
+                                class="leave-link"
+                                onclick="return confirm('Rostdan ham «{{ group.name }}» guruhidan chiqmoqchimisiz?');"
+                            >
+                                🚪 Guruhdan chiqish
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📝
+                </div>
+
+                <h2>
+                    Siz hali biron guruhga a'zo emassiz
+                </h2>
+
+                <p>
+                    Quyidagi barcha mavjud guruhlar ro'yxatidan
+                    o'zingizga ma'qulini tanlab,
+                    <b>«Guruhga yozilish»</b> tugmasini bosing.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- BARCHA GURUHLAR -->
+
+        <div class="section-header" style="margin-top:45px;">
+
+            <div class="section-title">
+
+                <span>📚 Barcha mavjud guruhlar</span>
+
+                <span class="badge-pill">
+                    {{ total_count }} ta
+                </span>
+
+            </div>
+
+        </div>
+
+
+        {% if all_groups %}
+
+            <div class="groups">
+
+                {% for group in all_groups %}
+
+                    <div class="group-card">
+
+                        <div>
+
+                            <div class="card-top">
+
+                                <div class="icon">
+                                    👥
+                                </div>
+
+
+                                {% if group.is_active %}
+
+                                    <span class="status">
+                                        ● Faol kurs
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="status"
+                                        style="background:#fee2e2;color:#dc2626;"
+                                    >
+                                        ● Yopiq
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <h2>
+                                {{ group.name }}
+                            </h2>
+
+
+                            {% if group.subject %}
+
+                                <div class="info">
+                                    📚 Fan / Yo‘nalish:
+                                    <b>{{ group.subject }}</b>
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.teacher %}
+
+                                <div class="info">
+                                    👨‍🏫 O‘qituvchi:
+                                    <b>
+                                        {{ group.teacher.full_name|default:group.teacher.username }}
+                                    </b>
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.room %}
+
+                                <div class="info">
+                                    🚪 Dars xonasi:
+                                    <b>{{ group.room }}</b>
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.lesson_days or group.lesson_time %}
+
+                                <div class="info">
+
+                                    🕐 Dars vaqti:
+
+                                    <b>
+
+                                        {% if group.lesson_days == "Mon Wed Fri" %}
+                                            D.Ch.Ju
+
+                                        {% elif group.lesson_days == "Tue Thu Sat" %}
+                                            S.P.Sh
+
+                                        {% elif group.lesson_days == "Du/Cho/Ju" %}
+                                            D.Ch.Ju
+
+                                        {% elif group.lesson_days == "Se/Pay/Sh" %}
+                                            S.P.Sh
+
+                                        {% elif group.lesson_days == "Mon Tue Wed Thu" %}
+                                            D.S.Ch.P
+
+                                        {% elif group.lesson_days == "Du/Se/Cho/Pay" %}
+                                            D.S.Ch.P
+
+                                        {% else %}
+                                            {{ group.lesson_days }}
+                                        {% endif %}
+
+
+                                        {% if group.lesson_time %}
+                                            • {{ group.lesson_time|time:"H:i" }}
+                                        {% endif %}
+
+                                    </b>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if group.monthly_price %}
+
+                                <div class="info">
+                                    💰 Oylik to‘lov:
+                                    <b>{{ group.monthly_price }} so‘m</b>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div>
+
+                            {% if group.is_enrolled %}
+
+                                <div class="join-btn enrolled-btn">
+                                    ✅ Siz a'zo bo'lgansiz
+                                </div>
+
+                            {% else %}
+
+                                <a
+                                    href="{% url 'guruhga_yozilish' group.id %}"
+                                    class="join-btn"
+                                >
+                                    ➕ Guruhga yozilish
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📁
+                </div>
+
+                <h2>
+                    Hozircha faol guruhlar mavjud emas
+                </h2>
+
+                <p>
+                    Tez orada yangi guruhlar va kurslar ochiladi.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+
+<script>
+
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("show");
+    }
+
+</script>
+
+</body>
+</html>

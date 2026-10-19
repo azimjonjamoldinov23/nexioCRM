@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reytingim — NEXIO.CRM</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --blue-light: #eff6ff;
+            --white: #ffffff;
+            --bg: #f5f7fb;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --green: #16a34a;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --gold: #f5a623;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px 25px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, .25);
+        }
+
+        .logo-text h2 {
+            font-size: 18px;
+            color: #111827;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 10px;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0 13px;
+            margin: 18px 0 8px;
+            letter-spacing: .5px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            border-radius: 11px;
+            text-decoration: none;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .nav a:hover {
+            background: #f1f5f9;
+            color: var(--blue);
+        }
+
+        .nav a.active {
+            background: var(--blue);
+            color: white;
+            box-shadow: 0 7px 18px rgba(37, 99, 235, .20);
+        }
+
+        .nav-icon {
+            width: 23px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* HELP CARD */
+
+        .help-card {
+            margin-top: auto;
+            background: var(--blue-light);
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .help-card strong {
+            display: block;
+            font-size: 13px;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .help-card p {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .help-card a {
+            display: block;
+            text-align: center;
+            background: var(--blue);
+            color: white;
+            padding: 8px;
+            border-radius: 9px;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            height: 78px;
+            background: rgba(255,255,255,.92);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            backdrop-filter: blur(10px);
+        }
+
+        .topbar-left h1 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .topbar-left p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #475569;
+            font-size: 17px;
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-left: 5px;
+            padding-left: 12px;
+            border-left: 1px solid var(--border);
+            text-decoration: none;
+        }
+
+        .avatar {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .profile-mini span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 30px 34px 50px;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .title {
+            font-size: 30px;
+            line-height: 1.2;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ================= MAIN RATING ================= */
+
+        .rating-main {
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            padding: 38px 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 24px;
+            color: white;
+            border-radius: 24px;
+            background:
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(255,255,255,.18),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    135deg,
+                    #2549bf,
+                    #416be0
+                );
+            box-shadow: 0 20px 45px rgba(49,87,213,.22);
+        }
+
+        .rating-main::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 50%;
+            right: 120px;
+            top: -110px;
+        }
+
+        .rating-main::after {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 50%;
+            right: 25px;
+            bottom: -85px;
+        }
+
+        .rating-info {
+            position: relative;
+            z-index: 2;
+        }
+
+        .rating-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 11px;
+            margin-bottom: 15px;
+            border-radius: 9px;
+            background: rgba(255,255,255,.12);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .rating-info h2 {
+            font-size: 23px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .rating-info p {
+            color: rgba(255,255,255,.78);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .rating-number {
+            position: relative;
+            z-index: 2;
+            min-width: 190px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 20px;
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .rating-number .number {
+            font-size: 58px;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        .rating-number .text {
+            margin-top: 9px;
+            color: rgba(255,255,255,.76);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            position: relative;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            padding: 23px;
+            box-shadow: var(--shadow);
+            transition: .2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #dce3f5;
+            box-shadow: 0 15px 40px rgba(35,55,100,.10);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 21px;
+        }
+
+        .card-number {
+            color: var(--text);
+            font-size: 29px;
+            line-height: 1;
+            font-weight: 900;
+            margin-bottom: 7px;
+        }
+
+        .card-title {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 21px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .section-title-icon {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: #fff7e5;
+            color: var(--gold);
+            font-size: 18px;
+        }
+
+        .section-header h2 {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .section-count {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 7px 11px;
+            background: #f6f7fa;
+            border-radius: 9px;
+        }
+
+        /* ================= RATING LIST ================= */
+
+        .rating-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rating-item {
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr) 130px 130px;
+            align-items: center;
+            gap: 18px;
+            padding: 18px 24px;
+            border-bottom: 1px solid #f0f2f6;
+            transition: .2s;
+        }
+
+        .rating-item:last-child {
+            border-bottom: none;
+        }
+
+        .rating-item:hover {
+            background: #fbfcff;
+        }
+
+        /* PLACE */
+
+        .place {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f1f4fa;
+            color: #667085;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .place.first {
+            background: #fff4d8;
+            color: #c58a17;
+        }
+
+        .place.second {
+            background: #edf1f6;
+            color: #64748b;
+        }
+
+        .place.third {
+            background: #fff0e7;
+            color: #c36a3d;
+        }
+
+        /* STUDENT */
+
+        .student-info {
+            min-width: 0;
+        }
+
+        .group-name {
+            overflow: hidden;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .group-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* POINTS */
+
+        .rating-points {
+            text-align: right;
+        }
+
+        .points {
+            color: var(--blue);
+            font-size: 22px;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        .points-text {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* STATUS */
+
+        .rating-status {
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 11px;
+            border-radius: 10px;
+            background: #e9f9f1;
+            color: #16a36a;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            padding: 70px 25px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background: #fff7e5;
+            font-size: 34px;
+        }
+
+        .empty h2 {
+            margin-bottom: 8px;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .empty p {
+            max-width: 480px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* MOBILE */
+
+        .mobile-menu {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1000px) {
+            .rating-item {
+                grid-template-columns: 50px minmax(0, 1fr) 100px;
+            }
+
+            .rating-status {
+                display: none;
+            }
+        }
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .25s;
+                box-shadow: 10px 0 30px rgba(0,0,0,.08);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-menu {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .topbar-left {
+                display: none;
+            }
+
+            .content {
+                padding: 25px 20px 45px;
+            }
+
+            .rating-main {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .rating-number {
+                width: 100%;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .content {
+                padding: 20px 15px 40px;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+
+            .rating-main {
+                padding: 28px 22px;
+                border-radius: 20px;
+            }
+
+            .rating-info h2 {
+                font-size: 20px;
+            }
+
+            .rating-number .number {
+                font-size: 48px;
+            }
+
+            .section-header {
+                padding: 18px;
+            }
+
+            .section-header h2 {
+                font-size: 16px;
+            }
+
+            .section-count {
+                display: none;
+            }
+
+            .rating-item {
+                grid-template-columns: 45px minmax(0, 1fr);
+                padding: 17px;
+                gap: 13px;
+            }
+
+            .rating-points {
+                grid-column: 2;
+                text-align: left;
+            }
+
+            .rating-status {
+                display: block;
+                grid-column: 2;
+                text-align: left;
+            }
+
+            .profile-mini span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            N
+        </div>
+
+        <div class="logo-text">
+            <h2>NEXIO</h2>
+            <span>EDUCATION CRM</span>
+        </div>
+
+    </div>
+
+
+    <div class="menu-title">
+        Asosiy
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="{% url 'index' %}">
+            <span class="nav-icon">⌂</span>
+            <span>Bosh sahifa</span>
+        </a>
+
+        <a href="{% url 'profil' %}">
+            <span class="nav-icon">◉</span>
+            <span>Profil</span>
+        </a>
+
+        <a href="{% url 'guruhlarim' %}">
+            <span class="nav-icon">▣</span>
+            <span>Guruhlarim</span>
+        </a>
+
+        <a href="{% url 'darslarim' %}">
+            <span class="nav-icon">▤</span>
+            <span>Darslarim</span>
+        </a>
+
+        <a href="{% url 'davomatim' %}">
+            <span class="nav-icon">✓</span>
+            <span>Davomat</span>
+        </a>
+
+        <a href="{% url 'reyting' %}" class="active">
+            <span class="nav-icon">★</span>
+            <span>Reytingim</span>
+        </a>
+
+        <a href="{% url 'chat' %}">
+            <span class="nav-icon">☵</span>
+            <span>Chat</span>
+        </a>
+
+    </nav>
+
+
+    <div class="menu-title">
+        Qo‘shimcha
+    </div>
+
+
+    <nav class="nav">
+
+        <a href="{% url 'tolov' %}">
+            <span class="nav-icon">₽</span>
+            <span>To‘lovlarim</span>
+        </a>
+
+        <a href="#">
+            <span class="nav-icon">♢</span>
+            <span>Bildirishnomalar</span>
+        </a>
+
+        <a href="{% url 'profil' %}">
+            <span class="nav-icon">⚙</span>
+            <span>Sozlamalar</span>
+        </a>
+
+    </nav>
+
+
+    <div class="help-card">
+
+        <strong>💬 Yordam kerakmi?</strong>
+
+        <p>
+            Muammo yoki savollaringiz bo‘lsa,
+            administrator bilan bog‘laning.
+        </p>
+
+        <a href="{% url 'chat' %}">
+            Chatga o'tish
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <button
+            class="mobile-menu"
+            onclick="toggleSidebar()"
+        >
+            ☰
+        </button>
+
+
+        <div class="topbar-left">
+
+            <h1>
+                Reytingim
+            </h1>
+
+            <p>
+                O‘quv natijalaringiz va guruh reytingi
+            </p>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <a
+                href="{% url 'chat' %}"
+                class="top-icon"
+            >
+                💬
+            </a>
+
+            <a
+                href="#"
+                class="top-icon"
+            >
+                🔔
+            </a>
+
+            <a
+                href="{% url 'profil' %}"
+                class="profile-mini"
+            >
+
+                <div class="avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <span>
+                    {{ request.user.first_name|default:request.user.username }}
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <div class="content">
+
+        <!-- PAGE HEADING -->
+
+        <div class="page-heading">
+
+            <h1 class="title">
+                🏆 Reytingim
+            </h1>
+
+            <p class="subtitle">
+                O‘quv jarayonidagi natijalaringiz va guruhdagi reytingingiz
+            </p>
+
+        </div>
+
+
+        <!-- MAIN RATING -->
+
+        <div class="rating-main">
+
+            <div class="rating-info">
+
+                <div class="rating-label">
+                    ⭐ NATIJALAR
+                </div>
+
+                <h2>
+                    Mening umumiy reytingim
+                </h2>
+
+                <p>
+                    Barcha baholaringiz asosida hisoblangan umumiy natija.
+                </p>
+
+            </div>
+
+
+            <div class="rating-number">
+
+                <div class="number">
+                    {{ reyting|default:0 }}
+                </div>
+
+                <div class="text">
+                    umumiy ball
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-top">
+
+                    <div class="card-icon">
+                        ⭐
+                    </div>
+
+                </div>
+
+                <div class="card-number">
+                    {{ ortacha_baho|default:0 }}
+                </div>
+
+                <div class="card-title">
+                    O‘rtacha baho
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-top">
+
+                    <div class="card-icon">
+                        📝
+                    </div>
+
+                </div>
+
+                <div class="card-number">
+                    {{ jami_baholar|default:0 }}
+                </div>
+
+                <div class="card-title">
+                    Jami baholar
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-top">
+
+                    <div class="card-icon">
+                        🏅
+                    </div>
+
+                </div>
+
+                <div class="card-number">
+                    {{ orin|default:"—" }}
+                </div>
+
+                <div class="card-title">
+                    Guruhdagi o‘rningiz
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RATING LIST -->
+
+        {% if reytinglar %}
+
+            <div class="section">
+
+                <div class="section-header">
+
+                    <div class="section-title">
+
+                        <div class="section-title-icon">
+                            🏆
+                        </div>
+
+                        <h2>
+                            Guruh reytingi
+                        </h2>
+
+                    </div>
+
+                    <div class="section-count">
+                        {{ reytinglar|length }} ta o‘quvchi
+                    </div>
+
+                </div>
+
+
+                <div class="rating-list">
+
+                    {% for item in reytinglar %}
+
+                        <div class="rating-item">
+
+                            <!-- O‘RIN -->
+
+                            <div>
+
+                                <div class="place
+                                    {% if forloop.counter == 1 %}first{% endif %}
+                                    {% if forloop.counter == 2 %}second{% endif %}
+                                    {% if forloop.counter == 3 %}third{% endif %}
+                                ">
+
+                                    {% if forloop.counter == 1 %}
+                                        🥇
+                                    {% elif forloop.counter == 2 %}
+                                        🥈
+                                    {% elif forloop.counter == 3 %}
+                                        🥉
+                                    {% else %}
+                                        {{ forloop.counter }}
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- O‘QUVCHI -->
+
+                            <div class="student-info">
+
+                                <div class="group-name">
+                                    {{ item.student }}
+                                </div>
+
+
+                                {% if item.group %}
+
+                                    <div class="group-info">
+                                        👥 {{ item.group.name }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- BALL -->
+
+                            <div class="rating-points">
+
+                                <div class="points">
+                                    {{ item.points|default:0 }}
+                                </div>
+
+                                <div class="points-text">
+                                    ball
+                                </div>
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div class="rating-status">
+
+                                <span class="badge">
+                                    ✓ Reytingda
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <!-- EMPTY -->
+
+            <div class="section">
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        🏆
+                    </div>
+
+                    <h2>
+                        Hozircha reyting mavjud emas
+                    </h2>
+
+                    <p>
+                        Sizning baholaringiz kiritilgandan keyin
+                        reyting natijalari shu yerda ko‘rinadi.
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+
+<script>
+
+    function toggleSidebar() {
+        document
+            .getElementById("sidebar")
+            .classList
+            .toggle("show");
+    }
+
+</script>
+
+</body>
+</html>
