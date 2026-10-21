@@ -3,7 +3,7 @@ services:
     name: nexio-crm
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn sozlamalar.wsgi:application"
+    startCommand: "gunicorn sozlamalar.wsgi:application --access-logfile - --error-logfile - --capture-output"
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true

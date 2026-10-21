@@ -77,6 +77,34 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# Send request exceptions to Render's stderr log. The formatter deliberately
+# excludes request bodies, headers, settings, and environment values.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "render_safe": {
+            "format": "{asctime} {levelname} {name}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "render_console": {
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stderr",
+            "formatter": "render_safe",
+            "level": "INFO",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["render_console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
+
 ROOT_URLCONF = "sozlamalar.urls"
 
 # ==================================================
