@@ -193,9 +193,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+# Faqat papka mavjud bo'lsa qo'shamiz (collectstatic xatoligini oldini oladi)
+_STATIC_DIR = BASE_DIR / 'static'
+STATICFILES_DIRS = [_STATIC_DIR] if _STATIC_DIR.is_dir() else []
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
