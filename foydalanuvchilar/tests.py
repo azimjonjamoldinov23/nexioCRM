@@ -8,7 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import admin
 from django.contrib.messages.storage.fallback import FallbackStorage
-from django.test import RequestFactory, SimpleTestCase
+from django.test import Client, RequestFactory, SimpleTestCase, TestCase
 from django.urls import reverse
 from django.template.loader import get_template, render_to_string
 from django.utils import translation
@@ -256,6 +256,42 @@ class SeparateAdminLoginTests(SimpleTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("index"))
         login.assert_called_once_with(request, user)
+
+
+class PublicLoginPostTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="login_student",
+            password="safe-test-password",
+            full_name="Login Student",
+            role=User.Role.STUDENT,
+            phone="+998901234567",
+        )
+
+    def test_root_login_post_authenticates_and_redirects_to_dashboard(self):
+        response = self.client.post(
+            reverse("login"),
+            {"username": self.user.username, "password": "safe-test-password"},
+        )
+
+        self.assertRedirects(response, reverse("index"))
+        self.assertEqual(int(self.client.session["_auth_user_id"]), self.user.pk)
+
+    def test_root_login_post_with_wrong_password_renders_login_error(self):
+        response = self.client.post(
+            reverse("login"),
+            {"username": self.user.username, "password": "wrong-password"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Foydalanuvchi nomi, email yoki parol noto‘g‘ri")
+
+    def test_root_login_form_has_csrf_token(self):
+        client = Client(enforce_csrf_checks=True)
+        response = client.get(reverse("login"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'name="csrfmiddlewaretoken"')
 
 
 class TelegramWebsiteIntegrationTests(IsolatedAsyncioTestCase):

@@ -111,6 +111,10 @@ if DATABASE_URL:
         "default": dj_database_url.parse(
             DATABASE_URL,
             conn_max_age=600,
+            # Render/PostgreSQL can close idle persistent connections. Verify
+            # a reused connection before the first query in each request so
+            # stale sockets do not turn login POSTs into intermittent 500s.
+            conn_health_checks=True,
             ssl_require=not DEBUG,
         )
     }
