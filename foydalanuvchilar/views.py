@@ -1,6 +1,7 @@
 import re
 import logging
 from django.shortcuts import render, redirect
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -69,7 +70,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             next_url = request.GET.get("next") or request.POST.get("next")
-            if next_url:
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                 return redirect(next_url)
             if user.is_staff or user.is_superuser or getattr(user, "role", None) == User.Role.ADMIN:
                 return redirect("admin_panel")
@@ -301,7 +302,7 @@ def admin_login(request):
             if user.is_staff or user.is_superuser or getattr(user, "role", None) == User.Role.ADMIN:
                 login(request, user)
                 next_url = request.GET.get("next") or request.POST.get("next")
-                if next_url:
+                if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                     return redirect(next_url)
                 return redirect("admin_panel")
             else:
@@ -336,7 +337,7 @@ def admin_login(request):
             if user.is_staff or user.is_superuser or getattr(user, "role", None) == User.Role.ADMIN:
                 login(request, user)
                 next_url = request.GET.get("next") or request.POST.get("next")
-                if next_url:
+                if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                     return redirect(next_url)
                 return redirect("admin_panel")
             else:

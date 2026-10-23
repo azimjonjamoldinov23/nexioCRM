@@ -180,6 +180,7 @@
 
         <form method="post" action="{% url 'admin_login' %}">
             {% csrf_token %}
+            {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
             <div class="field">
                 <label for="id_username">Foydalanuvchi nomi, email yoki telefon</label>
                 <input id="id_username" name="username" type="text" value="{{ username|default:form.username.value|default:'' }}"

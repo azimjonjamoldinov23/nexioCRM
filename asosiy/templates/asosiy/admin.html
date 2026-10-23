@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n static %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
@@ -79,7 +79,8 @@
         .welcome-copy, .welcome-user { position: relative; z-index: 1; }
         .welcome h2 { margin: 0 0 8px; font-size: 25px; }
         .welcome p { margin: 0; font-size: 13px; opacity: .88; }
-        .welcome-user { text-align: right; font-size: 14px; font-weight: 700; }
+        .welcome-user { position: relative; z-index: 1; text-align: right; font-size: 14px; font-weight: 700; }
+        .welcome-illustration { position: relative; z-index: 1; display: block; width: 190px; max-width: 28%; height: auto; margin: -22px 0 -22px auto; }
         .welcome-user span { display: block; margin-bottom: 5px; font-size: 11px; font-weight: 400; opacity: .75; }
         .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 20px 0; }
         .stat, .panel { overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: #fff; box-shadow: var(--shadow); }
@@ -198,6 +199,7 @@
             .welcome { align-items: flex-start; flex-direction: column; padding: 22px; }
             .welcome h2 { font-size: 21px; }
             .welcome-user { text-align: left; }
+            .welcome-illustration { position: absolute; right: 0; bottom: 0; width: 150px; max-width: 42%; opacity: .3; }
             .model-grid { grid-template-columns: 1fr; padding: 12px; }
         }
         @media (max-width: 480px) {
@@ -358,6 +360,7 @@
                     <h2>Xush kelibsiz, {{ request.user.full_name|default:request.user.username }}!</h2>
                     <p>CRM ma’lumotlarini ushbu paneldan ko‘ring va boshqaring.</p>
                 </div>
+                <img class="welcome-illustration" src="{% static 'images/crm-dashboard.svg' %}" alt="CRM dashboard statistikasi ilustratsiyasi">
                 <div class="welcome-user"><span>Admin hisob</span>{{ request.user.username }}</div>
             </section>
 
