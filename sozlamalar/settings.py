@@ -7,7 +7,6 @@ Django 6.1.1
 from pathlib import Path
 import os
 
-import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -129,37 +128,20 @@ TEMPLATES = [
 WSGI_APPLICATION = "sozlamalar.wsgi.application"
 
 # ==================================================
-# DATABASE: RENDER POSTGRESQL / LOCAL POSTGRESQL
+# DATABASE: SQLITE
 # ==================================================
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+SQLITE_PATH = Path(os.getenv("SQLITE_PATH", str(BASE_DIR / "db.sqlite3")))
+if not SQLITE_PATH.is_absolute():
+    SQLITE_PATH = BASE_DIR / SQLITE_PATH
 
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            # Render/PostgreSQL can close idle persistent connections. Verify
-            # a reused connection before the first query in each request so
-            # stale sockets do not turn login POSTs into intermittent 500s.
-            conn_health_checks=True,
-            ssl_require=not DEBUG,
-        )
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": str(SQLITE_PATH),
+        "OPTIONS": {"timeout": 20},
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv(
-                "POSTGRES_DB", "oquv_markazi_crm"
-            ),
-            "USER": os.getenv("POSTGRES_USER", "postgres"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
-            "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
-            "PORT": os.getenv("POSTGRES_PORT", "5432"),
-            "CONN_MAX_AGE": 600,
-        }
-    }
+}
 
 # ==================================================
 # CUSTOM USER MODEL

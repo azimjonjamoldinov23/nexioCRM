@@ -3,7 +3,11 @@ services:
     name: nexio-crm
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn sozlamalar.wsgi:application --access-logfile - --error-logfile - --capture-output"
+    startCommand: "bash -c 'python manage.py migrate && exec gunicorn sozlamalar.wsgi:application --access-logfile - --error-logfile - --capture-output'"
+    disk:
+      name: nexio-crm-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
@@ -13,10 +17,8 @@ services:
         value: ".onrender.com"
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://*.onrender.com"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: nexio-crm-db
-          property: connectionString
+      - key: SQLITE_PATH
+        value: /var/data/db.sqlite3
       - key: BOT_TOKEN
         sync: false
       - key: ADMIN_TELEGRAM_ID
@@ -24,6 +26,8 @@ services:
       - key: BOT_SERVICE_TOKEN
         sync: false
 
+# Mavjud PostgreSQL resursi ma'lumotlarni eksport qilish uchun saqlanadi;
+# Nexio web servisi bu bazaga ulanmaydi.
 databases:
   - name: nexio-crm-db
     databaseName: nexio_crm
